@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String   @unique
+  role      Role     @default(BUYER)
+  firstName String?
+  phone     String?
+  createdAt DateTime @default(now())
+
+  buyerProfile  BuyerProfile?
+  listings      Listing[]
+  savedListings SavedListing[]
+  alerts        Alert[]
+}
+
+enum Role {
+  BUYER
+  SELLER
+  DEALER
+  ADMIN
+}
+
+model BuyerProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id])
+
+  // Raw onboarding transcript
+  onboardingText  String?
+
+  // Extracted by AI
+  genres          String[] // e.g. ["fingerstyle", "bluegrass", "folk"]
+  brands          String[] // e.g. ["Martin", "Gibson", "Collings"]
+  currentGuitars  String?
+  dreamGuitar     String?
+  maxSpend        Int?     // in dollars
+
+  // Sophistication signal
+  sophistication  Int      @default(1) // 1-5, set by AI during extraction
+
+  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now())
+}
+
+model Listing {
+  id            String        @id @default(cuid())
+  sellerId      String
+  seller        User          @relation(fields: [sellerId], references: [id])
+
+  // Guitar details
+  brand         String
+  model         String
+  year          Int?
+  finish        String?
+  condition     Condition
+  description   String
+  price         Int           // in dollars
+  city          String?
+  state         String?
+
+  // Media
+  videoId       String?       // Cloudflare Stream video ID
+  videoThumb    String?       // Cloudflare Stream thumbnail URL
+  photos        String[]      // R2 URLs
+
+  // Status
+  status        ListingStatus @default(PENDING_PAYMENT)
+  tier          ListingTier   @default(STANDARD)
+
+  // Payment
+  stripeSessionId String?
+
+  // Match scores — updated by cron
+  matchScores   MatchScore[]
+  savedBy       SavedListing[]
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+enum Condition {
+  MINT
+  EXCELLENT
+  VERY_GOOD_PLUS
+  VERY_GOOD
+  GOOD
+  FAIR
+}
+
+enum ListingStatus {
+  PENDING_PAYMENT
+  ACTIVE
+  SOLD
+  EXPIRED
+  REMOVED
+}
+
+enum ListingTier {
+  STANDARD // under $2,500 — $25 list fee
+  PREMIUM // $2,500+ — $50 list fee
+  DEALER // dealer accounts — $25 flat, no back-end fee
+}
+
+model MatchScore {
+  id          String   @id @default(cuid())
+  listingId   String
+  listing     Listing  @relation(fields: [listingId], references: [id])
+  buyerId     String
+  score       Int      // 0–100
+  alertSent   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([listingId, buyerId])
+}
+
+model SavedListing {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, listingId])
+}
+
+model Alert {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  listingId String
+  channel   String // "sms" | "email"
+  sentAt    DateTime @default(now())
+}

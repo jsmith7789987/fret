@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --canvas: #f8f7f5;
+  --ink: #111110;
+}
+
+html,
+body {
+  background-color: var(--canvas);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@layer components {
+  .fret-input {
+    @apply w-full rounded-card border-[0.5px] border-hairline bg-white px-3 py-2 text-[14px] text-ink placeholder:text-muted/60 focus:border-ink;
+  }
+}
+
+/* No shadows anywhere except focus rings */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #f8f7f5, 0 0 0 4px #c17a2a;
+  border-radius: 6px;
+}
+
+/* Thin scrollbar that suits the clean aesthetic */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #e5e4e0;
+  border-radius: 999px;
+}
