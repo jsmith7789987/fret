@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 // Protected app surfaces: buyer, seller, dealer areas.
 const isProtectedRoute = createRouteMatcher([
@@ -10,11 +11,18 @@ const isProtectedRoute = createRouteMatcher([
   "/dealer(.*)",
 ]);
 
-export default clerkMiddleware(async (auth, req) => {
+// Clerk needs a secret key to verify sessions. If it isn't configured (e.g. a
+// fresh deploy before secrets are set), run a no-op middleware so the public
+// site still loads instead of 500-ing every route.
+const clerkConfigured = Boolean(process.env.CLERK_SECRET_KEY);
+
+const withClerk = clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) {
     await auth.protect();
   }
 });
+
+export default clerkConfigured ? withClerk : () => NextResponse.next();
 
 export const config = {
   matcher: [

@@ -8,7 +8,14 @@ import type { User } from "@prisma/client";
  * Returns null when there is no signed-in user.
  */
 export async function getCurrentDbUser(): Promise<User | null> {
-  const { userId } = await auth();
+  // auth()/currentUser() throw if Clerk env isn't configured. Degrade to "no
+  // user" so pages can redirect instead of returning a 500.
+  let userId: string | null = null;
+  try {
+    userId = (await auth()).userId;
+  } catch {
+    return null;
+  }
   if (!userId) return null;
 
   let user = await prisma.user.findUnique({ where: { clerkId: userId } });
