@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentDbUser } from "@/lib/auth";
 import { getStripe, getListingFee, getTier } from "@/lib/stripe";
 import { streamThumbnailUrl } from "@/lib/cloudflare";
+import { MIN_NEW_PRICE } from "@/lib/guitars";
 import type { Condition } from "@prisma/client";
 
 const CONDITIONS = [
@@ -26,6 +27,10 @@ interface CreateBody {
   state?: string | null;
   videoId?: string | null;
   photos?: string[];
+  bodyShape?: string | null;
+  topWood?: string | null;
+  backSidesWood?: string | null;
+  serialNumber?: string | null;
 }
 
 export async function POST(req: Request) {
@@ -57,6 +62,17 @@ export async function POST(req: Request) {
   if (!Number.isFinite(price) || price <= 0) {
     return NextResponse.json({ error: "Invalid price" }, { status: 400 });
   }
+  // fret. is luxury-only: nothing on the site sold under $3,000 new.
+  if (price < MIN_NEW_PRICE) {
+    return NextResponse.json(
+      {
+        error: `fret. only lists guitars from $${MIN_NEW_PRICE.toLocaleString(
+          "en-US"
+        )} up.`,
+      },
+      { status: 400 }
+    );
+  }
 
   const isDealer = user.role === "DEALER";
   const tier = getTier(price, isDealer);
@@ -73,6 +89,10 @@ export async function POST(req: Request) {
       price,
       city: body.city ?? null,
       state: body.state ?? null,
+      bodyShape: body.bodyShape ?? null,
+      topWood: body.topWood ?? null,
+      backSidesWood: body.backSidesWood ?? null,
+      serialNumber: body.serialNumber ?? null,
       videoId: body.videoId ?? null,
       videoThumb: body.videoId ? streamThumbnailUrl(body.videoId) : null,
       photos: Array.isArray(body.photos) ? body.photos.slice(0, 10) : [],

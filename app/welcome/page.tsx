@@ -37,7 +37,8 @@ export default function WelcomePage() {
           worth your attention, and text you the moment the right one lists.
         </p>
         <div className="mt-9 flex items-center justify-center gap-3">
-          <ButtonLink href="/sign-up" variant="primary" className="px-5 py-2.5">
+          {/* Goes straight into the profile flow — middleware handles auth. */}
+          <ButtonLink href="/onboarding" variant="primary" className="px-5 py-2.5">
             Build my profile
           </ButtonLink>
           <ButtonLink href="/sell" variant="secondary" className="px-5 py-2.5">

@@ -3,6 +3,15 @@
 import { useState } from "react";
 import { Button } from "../ui/Button";
 import { CONDITIONS, formatPrice } from "@/lib/format";
+import {
+  MAJOR_BRANDS,
+  BOUTIQUE_BRANDS,
+  BODY_SHAPES,
+  TOP_WOODS,
+  BACK_SIDES_WOODS,
+  MIN_NEW_PRICE,
+  modelsForBrand,
+} from "@/lib/guitars";
 
 type Step = 0 | 1 | 2 | 3;
 
@@ -16,6 +25,10 @@ interface Details {
   price: string;
   city: string;
   state: string;
+  bodyShape: string;
+  topWood: string;
+  backSidesWood: string;
+  serialNumber: string;
 }
 
 const EMPTY_DETAILS: Details = {
@@ -28,6 +41,10 @@ const EMPTY_DETAILS: Details = {
   price: "",
   city: "",
   state: "",
+  bodyShape: "",
+  topWood: "",
+  backSidesWood: "",
+  serialNumber: "",
 };
 
 function StepHeader({ step }: { step: Step }) {
@@ -71,6 +88,7 @@ export function SellFlow() {
 
   // Step 3 — details
   const [details, setDetails] = useState<Details>(EMPTY_DETAILS);
+  const [customBrand, setCustomBrand] = useState(false);
 
   // Step 4 — submit
   const [submitting, setSubmitting] = useState(false);
@@ -158,13 +176,18 @@ export function SellFlow() {
     setDetails((prev) => ({ ...prev, [key]: value }));
   }
 
+  // Major brands expose their model lines; boutique builders their body styles.
+  const modelOptions = details.brand ? modelsForBrand(details.brand) : [];
+
   const priceNum = Number(details.price);
-  const detailsValid =
+  const priceTooLow = details.price !== "" && priceNum < MIN_NEW_PRICE;
+  const detailsValid = Boolean(
     details.brand.trim() &&
-    details.model.trim() &&
-    details.description.trim() &&
-    Number.isFinite(priceNum) &&
-    priceNum > 0;
+      details.model.trim() &&
+      details.description.trim() &&
+      Number.isFinite(priceNum) &&
+      priceNum >= MIN_NEW_PRICE
+  );
 
   const fee = priceNum >= 2500 ? 50 : 25;
 
@@ -185,6 +208,10 @@ export function SellFlow() {
           price: priceNum,
           city: details.city.trim() || null,
           state: details.state.trim() || null,
+          bodyShape: details.bodyShape || null,
+          topWood: details.topWood || null,
+          backSidesWood: details.backSidesWood || null,
+          serialNumber: details.serialNumber.trim() || null,
           videoId,
           photos,
         }),
@@ -329,20 +356,131 @@ export function SellFlow() {
 
           <div className="mt-6 grid grid-cols-2 gap-4">
             <Field label="Brand" required>
-              <input
-                className="fret-input"
-                value={details.brand}
-                onChange={(e) => updateDetail("brand", e.target.value)}
-                placeholder="Martin"
-              />
+              {customBrand ? (
+                <div className="flex gap-2">
+                  <input
+                    className="fret-input"
+                    value={details.brand}
+                    onChange={(e) => updateDetail("brand", e.target.value)}
+                    placeholder="Builder name"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCustomBrand(false);
+                      updateDetail("brand", "");
+                      updateDetail("model", "");
+                    }}
+                    className="shrink-0 text-[12px] text-muted hover:text-ink"
+                  >
+                    List
+                  </button>
+                </div>
+              ) : (
+                <select
+                  className="fret-input"
+                  value={details.brand}
+                  onChange={(e) => {
+                    if (e.target.value === "__other__") {
+                      setCustomBrand(true);
+                      updateDetail("brand", "");
+                    } else {
+                      updateDetail("brand", e.target.value);
+                    }
+                    updateDetail("model", "");
+                  }}
+                >
+                  <option value="">Select a brand…</option>
+                  <optgroup label="Major">
+                    {MAJOR_BRANDS.map((b) => (
+                      <option key={b.slug} value={b.name}>
+                        {b.name}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Boutique">
+                    {BOUTIQUE_BRANDS.map((b) => (
+                      <option key={b.slug} value={b.name}>
+                        {b.name}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <option value="__other__">Other…</option>
+                </select>
+              )}
             </Field>
             <Field label="Model" required>
+              {modelOptions.length > 0 ? (
+                <select
+                  className="fret-input"
+                  value={details.model}
+                  onChange={(e) => updateDetail("model", e.target.value)}
+                >
+                  <option value="">Select a model…</option>
+                  {modelOptions.map((m) => (
+                    <option key={m} value={m}>
+                      {m}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  className="fret-input"
+                  value={details.model}
+                  onChange={(e) => updateDetail("model", e.target.value)}
+                  placeholder="D-18"
+                />
+              )}
+            </Field>
+            <Field label="Body shape">
+              <select
+                className="fret-input"
+                value={details.bodyShape}
+                onChange={(e) => updateDetail("bodyShape", e.target.value)}
+              >
+                <option value="">Select a shape…</option>
+                {BODY_SHAPES.map((sh) => (
+                  <option key={sh} value={sh}>
+                    {sh}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Serial number">
               <input
                 className="fret-input"
-                value={details.model}
-                onChange={(e) => updateDetail("model", e.target.value)}
-                placeholder="D-18"
+                value={details.serialNumber}
+                onChange={(e) => updateDetail("serialNumber", e.target.value)}
+                placeholder="e.g. 234567"
               />
+            </Field>
+            <Field label="Top wood">
+              <select
+                className="fret-input"
+                value={details.topWood}
+                onChange={(e) => updateDetail("topWood", e.target.value)}
+              >
+                <option value="">Select a top…</option>
+                {TOP_WOODS.map((w) => (
+                  <option key={w} value={w}>
+                    {w}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Back & sides">
+              <select
+                className="fret-input"
+                value={details.backSidesWood}
+                onChange={(e) => updateDetail("backSidesWood", e.target.value)}
+              >
+                <option value="">Select back & sides…</option>
+                {BACK_SIDES_WOODS.map((w) => (
+                  <option key={w} value={w}>
+                    {w}
+                  </option>
+                ))}
+              </select>
             </Field>
             <Field label="Year">
               <input
@@ -383,9 +521,14 @@ export function SellFlow() {
                 onChange={(e) =>
                   updateDetail("price", e.target.value.replace(/[^0-9]/g, ""))
                 }
-                placeholder="2750"
+                placeholder="4250"
                 inputMode="numeric"
               />
+              {priceTooLow && (
+                <span className="mt-1 block text-[11px] text-amber-text">
+                  fret. starts at ${MIN_NEW_PRICE.toLocaleString("en-US")}.
+                </span>
+              )}
             </Field>
             <Field label="City">
               <input

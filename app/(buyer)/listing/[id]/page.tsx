@@ -42,6 +42,20 @@ export default async function ListingDetailPage({
   const galleryPhotos = listing.videoId ? listing.photos : listing.photos.slice(1);
   const heroPhoto = listing.photos[0] ?? null;
 
+  const specs: [string, string][] = (
+    [
+      ["Brand", listing.brand],
+      ["Model", listing.model],
+      ["Year built", listing.year ? String(listing.year) : null],
+      ["Body shape", listing.bodyShape],
+      ["Top", listing.topWood],
+      ["Back & sides", listing.backSidesWood],
+      ["Finish", listing.finish],
+      ["Condition", formatCondition(listing.condition)],
+      ["Serial number", listing.serialNumber],
+    ] as [string, string | null][]
+  ).filter((entry): entry is [string, string] => Boolean(entry[1]));
+
   return (
     <div className="min-h-screen bg-canvas">
       <Nav />
@@ -98,6 +112,25 @@ export default async function ListingDetailPage({
             <p className="whitespace-pre-wrap text-[15px] leading-relaxed text-ink">
               {listing.description}
             </p>
+
+            {/* Specs */}
+            {specs.length > 0 && (
+              <div className="mt-8">
+                <h2 className="mb-3 text-[13px] font-medium uppercase tracking-wide text-muted">
+                  Specifications
+                </h2>
+                <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
+                  {specs.map(([label, value]) => (
+                    <div key={label} className="border-t-[0.5px] border-hairline pt-2">
+                      <dt className="text-[11px] uppercase tracking-wide text-muted">
+                        {label}
+                      </dt>
+                      <dd className="mt-0.5 text-[14px] text-ink">{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            )}
 
             {galleryPhotos.length > 0 && (
               <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
