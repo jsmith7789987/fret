@@ -50,7 +50,15 @@ export default async function ListingDetailPage({
       ["Body shape", listing.bodyShape],
       ["Top", listing.topWood],
       ["Back & sides", listing.backSidesWood],
-      ["Finish", listing.finish],
+      ["Neck", listing.neckWood],
+      ["Fretboard", listing.fretboardWood],
+      ["Bracing", listing.bracing],
+      ["Nut width", listing.nutWidth],
+      ["Scale length", listing.scaleLength],
+      ["Finish", [listing.finish, listing.finishType].filter(Boolean).join(" · ")],
+      ["Electronics", listing.electronics],
+      ["Case", listing.caseType],
+      ["Country of origin", listing.countryOfOrigin],
       ["Condition", formatCondition(listing.condition)],
       ["Serial number", listing.serialNumber],
     ] as [string, string | null][]
@@ -112,6 +120,41 @@ export default async function ListingDetailPage({
             <p className="whitespace-pre-wrap text-[15px] leading-relaxed text-ink">
               {listing.description}
             </p>
+
+            {/* Condition & wear */}
+            {(listing.wearSummary || listing.wearAndTear) && (
+              <div className="mt-8">
+                <h2 className="mb-2 text-[13px] font-medium uppercase tracking-wide text-muted">
+                  Condition &amp; wear
+                </h2>
+                {listing.wearSummary && (
+                  <p className="rounded-card border border-amber-border bg-amber-bg px-4 py-3 text-[14px] leading-relaxed text-amber-text">
+                    {listing.wearSummary}
+                  </p>
+                )}
+                {listing.wearAndTear && (
+                  <details className="mt-2">
+                    <summary className="cursor-pointer text-[12px] text-muted hover:text-ink">
+                      Read the seller&apos;s full description
+                    </summary>
+                    <p className="mt-2 whitespace-pre-wrap text-[14px] leading-relaxed text-ink">
+                      {listing.wearAndTear}
+                    </p>
+                  </details>
+                )}
+              </div>
+            )}
+
+            {listing.modifications && (
+              <div className="mt-8">
+                <h2 className="mb-2 text-[13px] font-medium uppercase tracking-wide text-muted">
+                  Modifications
+                </h2>
+                <p className="whitespace-pre-wrap text-[14px] leading-relaxed text-ink">
+                  {listing.modifications}
+                </p>
+              </div>
+            )}
 
             {/* Specs */}
             {specs.length > 0 && (

@@ -27,10 +27,22 @@ interface CreateBody {
   state?: string | null;
   videoId?: string | null;
   photos?: string[];
+  serialNumber?: string;
   bodyShape?: string | null;
   topWood?: string | null;
   backSidesWood?: string | null;
-  serialNumber?: string | null;
+  neckWood?: string | null;
+  fretboardWood?: string | null;
+  bracing?: string | null;
+  nutWidth?: string | null;
+  scaleLength?: string | null;
+  finishType?: string | null;
+  electronics?: string | null;
+  caseType?: string | null;
+  countryOfOrigin?: string | null;
+  modifications?: string | null;
+  wearAndTear?: string | null;
+  wearSummary?: string | null;
 }
 
 export async function POST(req: Request) {
@@ -53,6 +65,14 @@ export async function POST(req: Request) {
   if (!brand || !model || !description) {
     return NextResponse.json(
       { error: "brand, model and description are required" },
+      { status: 400 }
+    );
+  }
+  // Serial number is mandatory for every listing on fret.
+  const serialNumber = (body.serialNumber ?? "").trim();
+  if (!serialNumber) {
+    return NextResponse.json(
+      { error: "A serial number is required for every listing." },
       { status: 400 }
     );
   }
@@ -89,10 +109,22 @@ export async function POST(req: Request) {
       price,
       city: body.city ?? null,
       state: body.state ?? null,
+      serialNumber,
       bodyShape: body.bodyShape ?? null,
       topWood: body.topWood ?? null,
       backSidesWood: body.backSidesWood ?? null,
-      serialNumber: body.serialNumber ?? null,
+      neckWood: body.neckWood ?? null,
+      fretboardWood: body.fretboardWood ?? null,
+      bracing: body.bracing ?? null,
+      nutWidth: body.nutWidth ?? null,
+      scaleLength: body.scaleLength ?? null,
+      finishType: body.finishType ?? null,
+      electronics: body.electronics ?? null,
+      caseType: body.caseType ?? null,
+      countryOfOrigin: body.countryOfOrigin ?? null,
+      modifications: body.modifications ?? null,
+      wearAndTear: body.wearAndTear ?? null,
+      wearSummary: body.wearSummary ?? null,
       videoId: body.videoId ?? null,
       videoThumb: body.videoId ? streamThumbnailUrl(body.videoId) : null,
       photos: Array.isArray(body.photos) ? body.photos.slice(0, 10) : [],

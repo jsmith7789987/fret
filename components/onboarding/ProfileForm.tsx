@@ -17,7 +17,6 @@ import {
 } from "@/lib/guitars";
 
 const STEPS = [
-  "genres",
   "brands",
   "models",
   "shapes",
@@ -31,10 +30,6 @@ const STEPS = [
 type Step = (typeof STEPS)[number];
 
 const HEADINGS: Record<Step, { title: string; sub: string }> = {
-  genres: {
-    title: "What genres or styles do you play?",
-    sub: "Type or talk — however you'd describe it to another player.",
-  },
   brands: {
     title: "Which builders do you gravitate toward?",
     sub: "Pick as many as you like. Acoustic only, and nothing that sold under $3,000 new.",
@@ -77,7 +72,6 @@ export function ProfileForm() {
   const [promoted, setPromoted] = useState<string[]>([]);
 
   // Answers
-  const [genres, setGenres] = useState("");
   const [brands, setBrands] = useState<string[]>([]);
   const [models, setModels] = useState<string[]>([]);
   const [bodyShapes, setBodyShapes] = useState<string[]>([]);
@@ -125,7 +119,6 @@ export function ProfileForm() {
         .join("\n");
 
     const sections: string[] = [
-      `Genres and styles played:\n${genres.trim() || "(not specified)"}`,
       `Preferred builders:\n${brands.join(", ") || "(open)"}`,
       `Models of interest:\n${models.join(", ") || "(open)"}`,
       `Preferred body shapes:\n${bodyShapes.join(", ") || "(open)"}`,
@@ -216,15 +209,6 @@ export function ProfileForm() {
           {heading.title}
         </h2>
         <p className="mb-6 mt-1.5 text-[13px] text-muted">{heading.sub}</p>
-
-        {step === "genres" && (
-          <VoiceInput
-            value={genres}
-            onChange={setGenres}
-            placeholder="Fingerstyle, bluegrass, a little jazz…"
-            autoFocus
-          />
-        )}
 
         {step === "brands" && (
           <BrandPicker

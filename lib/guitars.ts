@@ -95,6 +95,113 @@ export const BACK_SIDES_WOODS = [
 ] as const;
 
 // ---------------------------------------------------------------------------
+// Build specification vocabularies
+// ---------------------------------------------------------------------------
+
+export const NECK_WOODS = [
+  "Honduran Mahogany",
+  "African Mahogany",
+  "Spanish Cedar",
+  "Maple",
+  "Figured Maple",
+  "Walnut",
+  "Koa",
+  "Rosewood",
+] as const;
+
+export const FRETBOARD_WOODS = [
+  "Ebony",
+  "Macassar Ebony",
+  "East Indian Rosewood",
+  "Brazilian Rosewood",
+  "Madagascar Rosewood",
+  "Granadillo",
+  "Pau Ferro",
+  "Maple",
+  "Richlite",
+] as const;
+
+export const BRACING_PATTERNS = [
+  "Scalloped X-Brace",
+  "Forward-Shifted Scalloped X-Brace",
+  "Non-Scalloped X-Brace",
+  "Standard X-Brace",
+  "Hybrid X-Brace",
+  "Ladder Braced",
+  "Fan Braced",
+  "A-Frame X-Brace",
+  "Double-X Brace",
+  "Adirondack Bracing",
+] as const;
+
+export const NUT_WIDTHS = [
+  '1 11/16"',
+  '1 3/4"',
+  '1 13/16"',
+  '1 7/8"',
+  '1 23/32"',
+  '2"',
+] as const;
+
+export const SCALE_LENGTHS = [
+  '24.9" (short scale)',
+  '25.34"',
+  '25.4" (long scale)',
+  '25.5"',
+  '24.75"',
+  '26.375" (baritone)',
+] as const;
+
+export const FINISH_TYPES = [
+  "Nitrocellulose Lacquer",
+  "Thin Nitrocellulose",
+  "Polyurethane",
+  "Polyester",
+  "French Polish (Shellac)",
+  "Varnish",
+  "Oil Finish",
+  "Satin",
+  "Aged / Relic",
+] as const;
+
+export const ELECTRONICS = [
+  "None (fully acoustic)",
+  "K&K Pure Mini",
+  "LR Baggs Anthem",
+  "LR Baggs Element",
+  "LR Baggs iMix",
+  "Fishman Matrix",
+  "Fishman Aura",
+  "Baggs M1 Soundhole",
+  "Trance Audio",
+  "Sunrise Soundhole",
+  "Other / Custom",
+] as const;
+
+export const CASE_TYPES = [
+  "Original Hardshell Case",
+  "Original Ameritage Case",
+  "Calton / Karura Flight Case",
+  "Aftermarket Hardshell Case",
+  "Gig Bag",
+  "No Case",
+] as const;
+
+export const COUNTRIES = [
+  "United States",
+  "Canada",
+  "United Kingdom",
+  "Ireland",
+  "Germany",
+  "France",
+  "Spain",
+  "Japan",
+  "Australia",
+  "New Zealand",
+  "Other",
+] as const;
+
+// ---------------------------------------------------------------------------
 // MAJOR luxury brands — alphabetical
 // ---------------------------------------------------------------------------
 

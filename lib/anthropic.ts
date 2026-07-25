@@ -162,6 +162,59 @@ export async function scoreMatch(
   return Math.max(0, Math.min(100, n));
 }
 
+export interface WearSummaryInput {
+  brand: string;
+  model: string;
+  year?: number | null;
+  condition: string;
+  wearAndTear: string;
+}
+
+export function buildWearPrompt(input: WearSummaryInput): string {
+  const guitar =
+    [input.year, input.brand, input.model].filter(Boolean).join(" ") ||
+    "this guitar";
+
+  return `You are summarizing a seller's description of wear and tear on a used acoustic guitar for a high-end guitar marketplace.
+
+Guitar: ${guitar}
+Seller's stated condition grade: ${input.condition}
+
+The seller wrote the following about the instrument's wear, damage, repairs and modifications:
+<wear>
+${input.wearAndTear}
+</wear>
+
+Write a concise, factual summary for prospective buyers. Requirements:
+- 2 to 4 sentences, plain prose, no bullet points and no headings.
+- Lead with the most materially significant item (structural work, cracks, neck resets, repairs) before cosmetic wear.
+- Preserve every specific detail the seller gave: locations, sizes, dates, who did the repair.
+- Neutral and factual. Do not editorialize, do not reassure the buyer, do not add sales language.
+- Never invent, soften, or omit a defect. If the seller's description is vague, say what they stated without embellishing.
+- Do not restate the brand, model, year, or price.
+
+Return only the summary text, with no preamble.`;
+}
+
+/**
+ * Condense a seller's free-text wear-and-tear description into a short,
+ * buyer-facing summary. The raw text is always kept alongside this.
+ */
+export async function summarizeWear(input: WearSummaryInput): Promise<string> {
+  const anthropic = getAnthropic();
+  const message = await anthropic.messages.create({
+    model: AI_MODEL,
+    max_tokens: 512,
+    messages: [{ role: "user", content: buildWearPrompt(input) }],
+  });
+
+  return message.content
+    .filter((b): b is Anthropic.TextBlock => b.type === "text")
+    .map((b) => b.text)
+    .join("")
+    .trim();
+}
+
 function clampSophistication(value: unknown): number {
   const n = typeof value === "number" ? Math.round(value) : 1;
   return Math.max(1, Math.min(5, n));

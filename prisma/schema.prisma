@@ -118,11 +118,26 @@ model Listing {
   city          String?
   state         String?
 
-  // Specs — captured for every guitar on the site
-  bodyShape     String?
-  topWood       String?
-  backSidesWood String?
-  serialNumber  String?
+  // Build specs — captured for every guitar on the site.
+  // Serial number is mandatory for all listings.
+  serialNumber    String
+  bodyShape       String?
+  topWood         String?
+  backSidesWood   String?
+  neckWood        String?
+  fretboardWood   String?
+  bracing         String?
+  nutWidth        String?
+  scaleLength     String?
+  finishType      String?
+  electronics     String?
+  caseType        String?
+  countryOfOrigin String?
+  modifications   String?
+
+  // Condition detail — seller writes it, AI condenses it. Raw text is kept.
+  wearAndTear   String?
+  wearSummary   String?
 
   // Media
   videoId       String?       // Cloudflare Stream video ID
