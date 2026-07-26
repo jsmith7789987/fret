@@ -13,7 +13,7 @@ buyer's profile above a threshold, the buyer gets an SMS.
 |---|---|
 | Framework | Next.js 14 (App Router) |
 | Database | PostgreSQL via Prisma |
-| Auth | Clerk |
+| Auth | None currently — see note below |
 | Image storage | Cloudflare R2 (S3-compatible) |
 | Video | Cloudflare Stream |
 | AI | Anthropic API (`claude-sonnet-4-6`) |
@@ -36,8 +36,8 @@ Open http://localhost:3000.
 
 ### Environment variables
 
-See `.env.example` for the full list. The minimum to boot the app locally is
-`DATABASE_URL` plus the Clerk keys. Each integration (Anthropic, Stripe,
+See `.env.example` for the full list. **Every page renders with no environment
+variables set at all** — the app degrades rather than erroring. Each integration (Anthropic, Stripe,
 Cloudflare, Twilio, Resend, Typesense) is lazily initialized — the app builds
 and runs without them, and only the corresponding feature fails if a key is
 missing.
@@ -48,6 +48,15 @@ missing.
 
 ## Architecture notes
 
+- **There is no sign-in wall.** The app has no sign-in page and no auth
+  provider in the render path; every request resolves to a single shared guest
+  account via `getCurrentDbUser()` in `lib/auth.ts`. That function is the one
+  place to change when real auth is reintroduced — every caller keeps working.
+  The Clerk webhook route and dependency are retained for that purpose.
+- **Graceful degradation.** Pages render even when Postgres is unreachable
+  (empty grids instead of 500s), and the seller flow waives the video
+  requirement when Cloudflare Stream isn't configured. Write endpoints return
+  503 rather than failing opaquely.
 - **Prisma** is only imported in server components and API routes
   (`lib/prisma.ts` is a singleton). Never import it from a client component.
 - **Match scoring** runs as a cron job hitting `POST /api/listings/score` with
@@ -65,8 +74,7 @@ missing.
 
 | Flow | Route(s) |
 |---|---|
-| Marketing landing | `/welcome` |
-| Auth | `/sign-in`, `/sign-up` |
+| Home | `/` |
 | Buyer onboarding (voice + AI extraction) | `/onboarding` → `POST /api/profile/extract` |
 | Browse (match-ranked grid) | `/browse` |
 | Listing detail (video + contact) | `/listing/[id]` |

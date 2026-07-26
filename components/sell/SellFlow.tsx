@@ -99,6 +99,9 @@ export function SellFlow() {
   const [videoId, setVideoId] = useState<string | null>(null);
   const [videoProgress, setVideoProgress] = useState(0);
   const [videoUploading, setVideoUploading] = useState(false);
+  // Set when this deployment has no video hosting configured — the video
+  // requirement is waived so the rest of the flow stays walkable.
+  const [videoUnavailable, setVideoUnavailable] = useState(false);
 
   // Step 2 — photos
   const [photos, setPhotos] = useState<string[]>([]);
@@ -136,7 +139,7 @@ export function SellFlow() {
   function canAdvance(): boolean {
     switch (step) {
       case 0:
-        return Boolean(videoId);
+        return Boolean(videoId) || videoUnavailable;
       case 2:
         return identityValid;
       case 4:
@@ -155,11 +158,21 @@ export function SellFlow() {
     setVideoProgress(0);
     try {
       const res = await fetch("/api/upload/video", { method: "POST" });
-      if (!res.ok) throw new Error("Could not get upload URL");
-      const { uploadURL, videoId: id } = (await res.json()) as {
-        uploadURL: string;
-        videoId: string;
+      const payload = (await res.json()) as {
+        configured?: boolean;
+        uploadURL?: string;
+        videoId?: string;
+        error?: string;
       };
+      if (payload.configured === false) {
+        setVideoUnavailable(true);
+        setVideoUploading(false);
+        return;
+      }
+      if (!res.ok || !payload.uploadURL || !payload.videoId) {
+        throw new Error(payload.error ?? "Could not get upload URL");
+      }
+      const { uploadURL, videoId: id } = payload;
 
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -393,6 +406,14 @@ export function SellFlow() {
               </span>
             )}
           </label>
+
+          {videoUnavailable && (
+            <p className="mt-3 rounded-card border border-amber-border bg-amber-bg px-4 py-3 text-[13px] text-amber-text">
+              Video hosting isn&apos;t configured on this deployment, so the
+              video requirement is waived for now. Set the Cloudflare Stream
+              environment variables to turn it back on.
+            </p>
+          )}
 
           {videoUploading && (
             <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-hairline">

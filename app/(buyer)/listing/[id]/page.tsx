@@ -20,7 +20,6 @@ export default async function ListingDetailPage({
   params: { id: string };
 }) {
   const user = await getCurrentDbUser();
-  if (!user) redirect("/sign-in");
 
   const listing = await prisma.listing.findUnique({
     where: { id: params.id },

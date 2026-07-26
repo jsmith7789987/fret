@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Nav } from "@/components/Nav";
 import { AlertBar } from "@/components/ui/AlertBar";
 import { BrowseGrid } from "@/components/listing/BrowseGrid";
@@ -12,25 +11,28 @@ export const dynamic = "force-dynamic";
 
 export default async function BrowsePage() {
   const user = await getCurrentDbUser();
-  if (!user) redirect("/sign-in");
 
-  const profile = await prisma.buyerProfile.findUnique({
-    where: { userId: user.id },
-  });
+  // Browse works with or without a profile. Without one, listings are simply
+  // unranked and a prompt to build a profile is shown. A database outage
+  // degrades to an empty grid rather than a 500.
+  let profile: Awaited<ReturnType<typeof prisma.buyerProfile.findUnique>> = null;
+  let scores: { listingId: string; score: number; createdAt: Date; updatedAt: Date }[] = [];
+  let listings: Awaited<ReturnType<typeof prisma.listing.findMany>> = [];
 
-  // No profile yet → send them through onboarding (the moat).
-  if (!profile) redirect("/onboarding");
+  try {
+    [profile, scores, listings] = await Promise.all([
+      prisma.buyerProfile.findUnique({ where: { userId: user.id } }),
+      prisma.matchScore.findMany({ where: { buyerId: user.id } }),
+      prisma.listing.findMany({
+        where: { status: "ACTIVE" },
+        orderBy: { createdAt: "desc" },
+      }),
+    ]);
+  } catch (err) {
+    console.error("Browse data unavailable:", err);
+  }
 
-  // Match scores for this buyer.
-  const scores = await prisma.matchScore.findMany({
-    where: { buyerId: user.id },
-  });
   const scoreByListing = new Map(scores.map((s) => [s.listingId, s.score]));
-
-  const listings = await prisma.listing.findMany({
-    where: { status: "ACTIVE" },
-    orderBy: { createdAt: "desc" },
-  });
 
   // Rank by match score; fall back to createdAt desc (already ordered) when
   // a listing has no score yet.
@@ -62,7 +64,8 @@ export default async function BrowsePage() {
     return !acc || s.updatedAt > acc ? s.updatedAt : acc;
   }, null);
 
-  const topPref = profile.brands[0] ?? profile.genres[0] ?? "All guitars";
+  const topPref =
+    profile?.brands[0] ?? profile?.genres[0] ?? "Build your profile";
 
   return (
     <div className="min-h-screen bg-canvas">
@@ -89,9 +92,9 @@ export default async function BrowsePage() {
           >
             <span className="h-1.5 w-1.5 rounded-full bg-amber" />
             <span className="font-medium">{topPref}</span>
-            {profile.maxSpend ? (
+            {profile?.maxSpend ? (
               <span className="text-muted">
-                · up to {formatPrice(profile.maxSpend)}
+                · up to {formatPrice(profile!.maxSpend)}
               </span>
             ) : null}
           </Link>

@@ -1,14 +1,9 @@
-import { redirect } from "next/navigation";
 import { Nav } from "@/components/Nav";
 import { SellFlow } from "@/components/sell/SellFlow";
-import { getCurrentDbUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
-export default async function SellPage() {
-  const user = await getCurrentDbUser();
-  if (!user) redirect("/sign-in");
-
+export default function SellPage() {
   return (
     <div className="min-h-screen bg-canvas">
       <Nav />

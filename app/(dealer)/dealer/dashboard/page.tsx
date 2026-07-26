@@ -13,13 +13,18 @@ export const dynamic = "force-dynamic";
 
 export default async function DealerDashboardPage() {
   const user = await getCurrentDbUser();
-  if (!user) redirect("/sign-in");
 
-  const listings = await prisma.listing.findMany({
-    where: { sellerId: user.id },
-    orderBy: { createdAt: "desc" },
-    include: { matchScores: true },
-  });
+  // Degrade to an empty dashboard if the database is unreachable.
+  const listings = await prisma.listing
+    .findMany({
+      where: { sellerId: user.id },
+      orderBy: { createdAt: "desc" },
+      include: { matchScores: true },
+    })
+    .catch((err) => {
+      console.error("Dashboard data unavailable:", err);
+      return [];
+    });
 
   const rows: SellerRowData[] = listings.map((l) => ({
     id: l.id,

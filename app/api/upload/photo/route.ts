@@ -7,10 +7,6 @@ const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/avif"];
 
 export async function POST(req: Request) {
   const user = await getCurrentDbUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   let contentType = "image/jpeg";
   let ext = "jpg";
   try {

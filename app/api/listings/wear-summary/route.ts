@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { summarizeWear } from "@/lib/anthropic";
-import { getCurrentDbUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -18,11 +17,6 @@ const CONDITIONS = [
  * The raw text is always stored alongside the summary — this never replaces it.
  */
 export async function POST(req: Request) {
-  const user = await getCurrentDbUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   let body: {
     brand?: string;
     model?: string;

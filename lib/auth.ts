@@ -1,47 +1,53 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
 import { prisma } from "./prisma";
 import type { User } from "@prisma/client";
 
 /**
- * Resolve the current Clerk user to our local DB User record.
- * Lazily creates the record if the Clerk webhook hasn't fired yet.
- * Returns null when there is no signed-in user.
+ * fret. currently runs without a sign-in wall — there is no sign-in page and
+ * no auth provider in the render path. Everything resolves to a single shared
+ * guest account so the browse, onboarding and sell flows are fully usable.
+ *
+ * When real auth is reintroduced, this is the one function to change: resolve
+ * the signed-in user here and every caller keeps working.
  */
-export async function getCurrentDbUser(): Promise<User | null> {
-  // auth()/currentUser() throw if Clerk env isn't configured. Degrade to "no
-  // user" so pages can redirect instead of returning a 500.
-  let userId: string | null = null;
+
+const GUEST_CLERK_ID = "guest";
+const GUEST_EMAIL = "guest@fret.market";
+
+/** Used when the database is unreachable, so pages still render. */
+const OFFLINE_GUEST: User = {
+  id: "guest-offline",
+  clerkId: GUEST_CLERK_ID,
+  email: GUEST_EMAIL,
+  role: "SELLER",
+  firstName: "Guest",
+  phone: null,
+  createdAt: new Date(0),
+};
+
+/**
+ * Resolve the acting user. Returns the shared guest account, creating it on
+ * first use. Never throws — if Postgres is unreachable it returns an offline
+ * stand-in so pages render instead of 500-ing.
+ */
+export async function getCurrentDbUser(): Promise<User> {
   try {
-    userId = (await auth()).userId;
-  } catch {
-    return null;
+    return await prisma.user.upsert({
+      where: { clerkId: GUEST_CLERK_ID },
+      update: {},
+      create: {
+        clerkId: GUEST_CLERK_ID,
+        email: GUEST_EMAIL,
+        firstName: "Guest",
+        role: "SELLER",
+      },
+    });
+  } catch (err) {
+    console.error("Could not resolve guest user (database unreachable):", err);
+    return OFFLINE_GUEST;
   }
-  if (!userId) return null;
+}
 
-  let user = await prisma.user.findUnique({ where: { clerkId: userId } });
-  if (user) return user;
-
-  // Fallback: webhook may not have run yet. Create from Clerk data.
-  const clerkUser = await currentUser();
-  if (!clerkUser) return null;
-
-  const email =
-    clerkUser.emailAddresses.find(
-      (e) => e.id === clerkUser.primaryEmailAddressId
-    )?.emailAddress ?? clerkUser.emailAddresses[0]?.emailAddress;
-
-  if (!email) return null;
-
-  user = await prisma.user.upsert({
-    where: { clerkId: userId },
-    update: {},
-    create: {
-      clerkId: userId,
-      email,
-      firstName: clerkUser.firstName ?? null,
-      phone: clerkUser.phoneNumbers[0]?.phoneNumber ?? null,
-    },
-  });
-
-  return user;
+/** True when the user is the offline stand-in — i.e. writes will not persist. */
+export function isOfflineUser(user: User): boolean {
+  return user.id === OFFLINE_GUEST.id;
 }

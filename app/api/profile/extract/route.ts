@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { extractProfile, type ExtractedProfile } from "@/lib/anthropic";
 import { prisma } from "@/lib/prisma";
-import { getCurrentDbUser } from "@/lib/auth";
+import { getCurrentDbUser, isOfflineUser } from "@/lib/auth";
 
 interface GuitarPayload {
   brand?: string;
@@ -55,8 +55,11 @@ function strings(list: unknown, limit = 60): string[] {
 
 export async function POST(req: Request) {
   const user = await getCurrentDbUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (isOfflineUser(user)) {
+    return NextResponse.json(
+      { error: "Database unavailable — try again shortly." },
+      { status: 503 }
+    );
   }
 
   let onboardingText = "";
