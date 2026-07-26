@@ -6,8 +6,6 @@ import { ListingGrid } from "./ListingGrid";
 import type { ListingCardData } from "./ListingCard";
 
 const VINTAGE_BEFORE = 1990;
-// Nothing on fret. is under $3,000, so the first meaningful bracket sits above it.
-const UNDER_PRICE = 5000;
 
 type Filter =
   | { kind: "all" }
@@ -31,7 +29,7 @@ export function BrowseGrid({ listings }: { listings: ListingCardData[] }) {
       case "vintage":
         return listings.filter((l) => l.year != null && l.year < VINTAGE_BEFORE);
       case "under":
-        return listings.filter((l) => l.price < UNDER_PRICE);
+        return listings.filter((l) => l.price < 2500);
       case "video":
         return listings.filter((l) => Boolean(l.videoId));
       default:
@@ -65,7 +63,7 @@ export function BrowseGrid({ listings }: { listings: ListingCardData[] }) {
           Vintage
         </Chip>
         <Chip active={isActive({ kind: "under" })} onClick={() => setFilter({ kind: "under" })}>
-          Under ${UNDER_PRICE.toLocaleString("en-US")}
+          Under $2,500
         </Chip>
         <Chip active={isActive({ kind: "video" })} onClick={() => setFilter({ kind: "video" })}>
           With video
