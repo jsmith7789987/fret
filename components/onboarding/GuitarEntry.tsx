@@ -10,6 +10,7 @@ import {
   modelsForBrand,
 } from "@/lib/guitars";
 import { guitarTitle } from "@/lib/format";
+import { Field } from "@/components/ui/Field";
 
 export interface GuitarSpec {
   brand: string;
@@ -86,7 +87,7 @@ export function GuitarEntry({
 
       <div className="grid grid-cols-2 gap-3">
         {/* Brand */}
-        <Labeled label="Brand">
+        <Field label="Brand">
           {customBrand ? (
             <div className="flex gap-2">
               <input
@@ -137,10 +138,10 @@ export function GuitarEntry({
               <option value="__other__">Other…</option>
             </select>
           )}
-        </Labeled>
+        </Field>
 
         {/* Model */}
-        <Labeled label="Model">
+        <Field label="Model">
           {modelOptions.length > 0 ? (
             <select
               className="fret-input"
@@ -162,10 +163,10 @@ export function GuitarEntry({
               placeholder="Model"
             />
           )}
-        </Labeled>
+        </Field>
 
         {/* Body shape */}
-        <Labeled label="Body shape">
+        <Field label="Body shape">
           <select
             className="fret-input"
             value={value.bodyShape}
@@ -178,10 +179,10 @@ export function GuitarEntry({
               </option>
             ))}
           </select>
-        </Labeled>
+        </Field>
 
         {/* Year built */}
-        <Labeled label="Year built">
+        <Field label="Year built">
           <input
             className="fret-input"
             value={value.yearBuilt}
@@ -194,10 +195,10 @@ export function GuitarEntry({
             placeholder="1968"
             inputMode="numeric"
           />
-        </Labeled>
+        </Field>
 
         {/* Top wood */}
-        <Labeled label="Top wood">
+        <Field label="Top wood">
           <select
             className="fret-input"
             value={value.topWood}
@@ -210,10 +211,10 @@ export function GuitarEntry({
               </option>
             ))}
           </select>
-        </Labeled>
+        </Field>
 
         {/* Back / sides wood */}
-        <Labeled label="Back & sides">
+        <Field label="Back & sides">
           <select
             className="fret-input"
             value={value.backSidesWood}
@@ -226,22 +227,22 @@ export function GuitarEntry({
               </option>
             ))}
           </select>
-        </Labeled>
+        </Field>
 
         {/* Serial number */}
-        <Labeled label="Serial number" className="col-span-2">
+        <Field label="Serial number" className="col-span-2">
           <input
             className="fret-input"
             value={value.serialNumber}
             onChange={(e) => set("serialNumber", e.target.value)}
             placeholder="e.g. 234567"
           />
-        </Labeled>
+        </Field>
       </div>
 
       {/* Description */}
       <div className="mt-3">
-        <Labeled label="Description">
+        <Field label="Description">
           <textarea
             className="fret-input resize-none"
             rows={3}
@@ -249,28 +250,9 @@ export function GuitarEntry({
             onChange={(e) => set("description", e.target.value)}
             placeholder="How it sounds, how you use it, any history or work done…"
           />
-        </Labeled>
+        </Field>
       </div>
     </div>
-  );
-}
-
-function Labeled({
-  label,
-  className = "",
-  children,
-}: {
-  label: string;
-  className?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label className={`block ${className}`}>
-      <span className="mb-1 block text-[12px] font-medium text-muted">
-        {label}
-      </span>
-      {children}
-    </label>
   );
 }
 
