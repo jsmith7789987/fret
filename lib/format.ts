@@ -23,7 +23,7 @@ export const CONDITIONS: { value: Condition; label: string }[] = (
 
 export function formatLocation(
   city?: string | null,
-  state?: string | null
+  state?: string | null,
 ): string | null {
   const parts = [city, state].filter(Boolean);
   return parts.length ? parts.join(", ") : null;

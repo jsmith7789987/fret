@@ -22,7 +22,7 @@ export async function sendMatchEmail(
     year?: number | null;
     price: number;
     id: string;
-  }
+  },
 ) {
   const guitarName = [listing.year, listing.brand, listing.model]
     .filter(Boolean)
@@ -48,7 +48,7 @@ export async function sendContactEmail(
   to: string,
   from: string,
   message: string,
-  listing: { brand: string; model: string; id: string }
+  listing: { brand: string; model: string; id: string },
 ) {
   const guitarName = `${listing.brand} ${listing.model}`;
   await getClient().emails.send({

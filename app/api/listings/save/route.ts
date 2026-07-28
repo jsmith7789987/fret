@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentDbUser, isOfflineUser } from "@/lib/auth";
+import { requireApiUser } from "@/lib/auth";
 
 /** Toggle a saved listing for the current user. */
 export async function POST(req: Request) {
-  const user = await getCurrentDbUser();
-  if (isOfflineUser(user)) {
-    return NextResponse.json(
-      { error: "Database unavailable — try again shortly." },
-      { status: 503 }
-    );
+  const auth = await requireApiUser();
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
+  const user = auth.user;
 
   let listingId = "";
   try {

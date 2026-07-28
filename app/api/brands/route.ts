@@ -15,7 +15,7 @@ export async function GET() {
     });
     promoted = rows.map((r) => r.displayName);
   } catch (err) {
-    // DB unavailable — still serve the static catalog.
+    // DB unavailable. still serve the static catalog.
     console.error("Could not load promoted brands:", err);
   }
 

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentDbUser, isOfflineUser } from "@/lib/auth";
+import { requireApiUser } from "@/lib/auth";
 import { getStripe, getListingFee, getTier } from "@/lib/stripe";
 import { streamThumbnailUrl } from "@/lib/cloudflare";
 import { MIN_NEW_PRICE } from "@/lib/guitars";
@@ -46,13 +46,11 @@ interface CreateBody {
 }
 
 export async function POST(req: Request) {
-  const user = await getCurrentDbUser();
-  if (isOfflineUser(user)) {
-    return NextResponse.json(
-      { error: "Database unavailable — try again shortly." },
-      { status: 503 }
-    );
+  const auth = await requireApiUser();
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
+  const user = auth.user;
 
   let body: CreateBody;
   try {
@@ -68,7 +66,7 @@ export async function POST(req: Request) {
   if (!brand || !model || !description) {
     return NextResponse.json(
       { error: "brand, model and description are required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
   // Serial number is mandatory for every listing on fret.
@@ -76,7 +74,7 @@ export async function POST(req: Request) {
   if (!serialNumber) {
     return NextResponse.json(
       { error: "A serial number is required for every listing." },
-      { status: 400 }
+      { status: 400 },
     );
   }
   if (!condition || !CONDITIONS.includes(condition)) {
@@ -90,10 +88,10 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error: `fret. only lists guitars from $${MIN_NEW_PRICE.toLocaleString(
-          "en-US"
+          "en-US",
         )} up.`,
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -149,7 +147,7 @@ export async function POST(req: Request) {
             currency: "usd",
             unit_amount: fee,
             product_data: {
-              name: `fret. listing fee — ${tier.toLowerCase()}`,
+              name: `fret. listing fee. ${tier.toLowerCase()}`,
               description: `${brand} ${model}`,
             },
           },
@@ -166,7 +164,7 @@ export async function POST(req: Request) {
     console.error("Stripe checkout failed:", err);
     return NextResponse.json(
       { error: "Could not start checkout", listingId: listing.id },
-      { status: 502 }
+      { status: 502 },
     );
   }
 }

@@ -95,19 +95,19 @@ const EMPTY_DETAILS: Details = {
 export function SellFlow() {
   const [step, setStep] = useState(0);
 
-  // Step 1 — video
+  // Step 1. video
   const [videoId, setVideoId] = useState<string | null>(null);
   const [videoProgress, setVideoProgress] = useState(0);
   const [videoUploading, setVideoUploading] = useState(false);
-  // Set when this deployment has no video hosting configured — the video
+  // Set when this deployment has no video hosting configured. the video
   // requirement is waived so the rest of the flow stays walkable.
   const [videoUnavailable, setVideoUnavailable] = useState(false);
 
-  // Step 2 — photos
+  // Step 2. photos
   const [photos, setPhotos] = useState<string[]>([]);
   const [photoUploading, setPhotoUploading] = useState(false);
 
-  // Steps 3–6 — details
+  // Steps 3–6. details
   const [details, setDetails] = useState<Details>(EMPTY_DETAILS);
   const [customBrand, setCustomBrand] = useState(false);
 
@@ -130,7 +130,7 @@ export function SellFlow() {
 
   // ---- per-step validation -------------------------------------------------
   const identityValid = Boolean(
-    details.brand.trim() && details.model.trim() && details.serialNumber.trim()
+    details.brand.trim() && details.model.trim() && details.serialNumber.trim(),
   );
   const conditionValid = Boolean(details.description.trim());
   const priceValid = Number.isFinite(priceNum) && priceNum >= MIN_NEW_PRICE;
@@ -259,7 +259,7 @@ export function SellFlow() {
       set("wearSummary", data.summary);
     } catch (err) {
       setSummaryError(
-        err instanceof Error ? err.message : "Could not summarize that."
+        err instanceof Error ? err.message : "Could not summarize that.",
       );
     } finally {
       setSummarizing(false);
@@ -305,14 +305,15 @@ export function SellFlow() {
         }),
       });
       const data = (await res.json()) as { url?: string; error?: string };
-      if (!res.ok || !data.url) throw new Error(data.error ?? "Checkout failed");
+      if (!res.ok || !data.url)
+        throw new Error(data.error ?? "Checkout failed");
       window.location.href = data.url;
     } catch (err) {
       console.error(err);
       setError(
         err instanceof Error
           ? err.message
-          : "Could not start checkout. Please try again."
+          : "Could not start checkout. Please try again.",
       );
       setSubmitting(false);
     }
@@ -338,7 +339,8 @@ export function SellFlow() {
       ["Scale", details.scaleLength],
       [
         "Finish",
-        [details.finish, details.finishType].filter(Boolean).join(" · ") || null,
+        [details.finish, details.finishType].filter(Boolean).join(" · ") ||
+          null,
       ],
       ["Electronics", details.electronics],
       ["Case", details.caseType],
@@ -479,7 +481,7 @@ export function SellFlow() {
         <div className="animate-fadeUp">
           <h2 className="font-serif text-[24px] text-ink">The guitar</h2>
           <p className="mt-2 text-[13px] text-muted">
-            Serial number is required on every fret. listing — it&apos;s how
+            Serial number is required on every fret. listing. it&apos;s how
             buyers verify what they&apos;re looking at.
           </p>
 
@@ -609,7 +611,7 @@ export function SellFlow() {
           <h2 className="font-serif text-[24px] text-ink">Build specs</h2>
           <p className="mt-2 text-[13px] text-muted">
             Everything you know. Buyers at this level care about woods, bracing
-            and scale — leave blank anything you can&apos;t confirm.
+            and scale. leave blank anything you can&apos;t confirm.
           </p>
 
           <div className="mt-6 grid grid-cols-2 gap-4">
@@ -713,7 +715,7 @@ export function SellFlow() {
           <h2 className="font-serif text-[24px] text-ink">Condition</h2>
           <p className="mt-2 text-[13px] text-muted">
             Describe the wear honestly and in full. We&apos;ll condense it into
-            a short summary for buyers — your original text is kept and shown
+            a short summary for buyers. your original text is kept and shown
             alongside it.
           </p>
 
@@ -736,7 +738,7 @@ export function SellFlow() {
                 rows={6}
                 value={details.wearAndTear}
                 onChange={(e) => set("wearAndTear", e.target.value)}
-                placeholder="Every scratch, ding, buckle rash, finish check, crack, brace lift or repair — where it is, how big, when it happened, who did the work. Be exhaustive; buyers at this level will find it anyway."
+                placeholder="Every scratch, ding, buckle rash, finish check, crack, brace lift or repair. where it is, how big, when it happened, who did the work. Be exhaustive; buyers at this level will find it anyway."
               />
             </Field>
             <div className="mt-2 flex flex-wrap items-center gap-3">
@@ -844,7 +846,7 @@ export function SellFlow() {
           <div className="mt-6 rounded-card border-[0.5px] border-hairline bg-white p-5">
             <p className="font-serif text-[20px] text-ink">{guitarName}</p>
             <p className="mt-1 text-[13px] text-muted">
-              Serial {details.serialNumber || "—"}
+              Serial {details.serialNumber || " - "}
             </p>
             <p className="mt-3 text-[18px] font-medium text-ink">
               {formatPrice(priceNum || 0)}
@@ -884,7 +886,7 @@ export function SellFlow() {
             <div>
               <p className="text-[14px] font-medium text-ink">Listing fee</p>
               <p className="text-[12px] text-muted">
-                {priceNum >= 2500 ? "Premium ($2,500+)" : "Standard"} — one-time
+                {priceNum >= 2500 ? "Premium ($2,500+)" : "Standard"}. one-time
               </p>
             </div>
             <p className="font-serif text-[22px] text-ink">${fee}</p>
@@ -908,7 +910,10 @@ export function SellFlow() {
             {submitting ? "Starting checkout…" : `Pay $${fee} & publish`}
           </Button>
         ) : (
-          <Button onClick={() => setStep((s) => s + 1)} disabled={!canAdvance()}>
+          <Button
+            onClick={() => setStep((s) => s + 1)}
+            disabled={!canAdvance()}
+          >
             Continue
           </Button>
         )}

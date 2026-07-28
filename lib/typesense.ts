@@ -76,7 +76,7 @@ export async function indexListing(listing: Listing): Promise<void> {
       .documents()
       .upsert(toDocument(listing));
   } catch (err) {
-    // Search indexing is non-critical — never block the write path.
+    // Search indexing is non-critical. never block the write path.
     console.error("Typesense indexListing failed:", err);
   }
 }
@@ -91,13 +91,10 @@ export async function removeListing(id: string): Promise<void> {
 
 export async function searchListings(query: string) {
   await ensureCollection();
-  return getClient()
-    .collections(LISTINGS_COLLECTION)
-    .documents()
-    .search({
-      q: query,
-      query_by: "brand,model",
-      filter_by: "status:=ACTIVE",
-      sort_by: "price:asc",
-    });
+  return getClient().collections(LISTINGS_COLLECTION).documents().search({
+    q: query,
+    query_by: "brand,model",
+    filter_by: "status:=ACTIVE",
+    sort_by: "price:asc",
+  });
 }

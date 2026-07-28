@@ -14,7 +14,7 @@ const CONDITIONS = [
 
 /**
  * Summarize a seller's free-text wear-and-tear description.
- * The raw text is always stored alongside the summary — this never replaces it.
+ * The raw text is always stored alongside the summary. this never replaces it.
  */
 export async function POST(req: Request) {
   let body: {
@@ -34,13 +34,13 @@ export async function POST(req: Request) {
   if (wearAndTear.length < 20) {
     return NextResponse.json(
       { error: "Describe the wear in a bit more detail first." },
-      { status: 400 }
+      { status: 400 },
     );
   }
   if (wearAndTear.length > 5000) {
     return NextResponse.json(
       { error: "That description is too long to summarize." },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
     if (!summary) {
       return NextResponse.json(
         { error: "Could not summarize that. You can write your own." },
-        { status: 502 }
+        { status: 502 },
       );
     }
 
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     console.error("Wear summary failed:", err);
     return NextResponse.json(
       { error: "Summary service unavailable. You can write your own." },
-      { status: 502 }
+      { status: 502 },
     );
   }
 }

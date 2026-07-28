@@ -5,14 +5,14 @@ import {
   SellerListingRow,
   type SellerRowData,
 } from "@/components/listing/SellerListingRow";
-import { getCurrentDbUser } from "@/lib/auth";
+import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatPrice } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
 export default async function DealerDashboardPage() {
-  const user = await getCurrentDbUser();
+  const user = await requireUser("/dealer/dashboard");
 
   // Degrade to an empty dashboard if the database is unreachable.
   const listings = await prisma.listing
@@ -39,7 +39,7 @@ export default async function DealerDashboardPage() {
     matchCount: l.matchScores.filter((m) => m.score >= 70).length,
     topScore: l.matchScores.reduce<number | null>(
       (acc, m) => (acc == null || m.score > acc ? m.score : acc),
-      null
+      null,
     ),
   }));
 
@@ -68,7 +68,7 @@ export default async function DealerDashboardPage() {
         {!isDealer && (
           <div className="mb-6 rounded-card border border-amber-border bg-amber-bg px-4 py-3 text-[13px] text-amber-text">
             This is the dealer view. Your account isn&apos;t flagged as a dealer
-            yet — contact us to enable flat $25 listing pricing across your
+            yet. contact us to enable flat $25 listing pricing across your
             inventory.
           </div>
         )}

@@ -7,7 +7,7 @@ export function ContactSeller({ listingId }: { listingId: string }) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle"
+    "idle",
   );
 
   async function send() {
@@ -49,7 +49,7 @@ export function ContactSeller({ listingId }: { listingId: string }) {
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         rows={4}
-        placeholder="Hi — is this still available? I'm interested in…"
+        placeholder="Hi, is this still available? I'm interested in..."
         className="w-full resize-none rounded-card border-[0.5px] border-hairline bg-white px-4 py-3 text-[14px] text-ink placeholder:text-muted/60 focus:border-ink"
       />
       {status === "error" && (

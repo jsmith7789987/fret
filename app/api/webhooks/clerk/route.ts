@@ -72,9 +72,7 @@ export async function POST(req: Request) {
   }
 
   if (event.type === "user.deleted") {
-    await prisma.user
-      .delete({ where: { clerkId: data.id } })
-      .catch(() => null);
+    await prisma.user.delete({ where: { clerkId: data.id } }).catch(() => null);
   }
 
   return new Response("ok", { status: 200 });

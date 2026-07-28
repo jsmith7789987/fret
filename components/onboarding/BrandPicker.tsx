@@ -30,8 +30,8 @@ export function BrandPicker({
       .filter(
         (name) =>
           !BOUTIQUE_BRANDS.some(
-            (b) => b.name.toLowerCase() === name.toLowerCase()
-          )
+            (b) => b.name.toLowerCase() === name.toLowerCase(),
+          ),
       )
       .map((name) => ({
         slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
@@ -40,7 +40,7 @@ export function BrandPicker({
         blurb: "Added by the fret. community",
       }));
     return [...BOUTIQUE_BRANDS, ...promotedBrands].sort((a, b) =>
-      a.name.localeCompare(b.name)
+      a.name.localeCompare(b.name),
     );
   }, [promoted]);
 
@@ -70,13 +70,13 @@ export function BrandPicker({
         body: JSON.stringify({ name }),
       });
     } catch {
-      // Non-critical — the selection still stands locally.
+      // Non-critical. the selection still stands locally.
     }
   }
 
   return (
     <div>
-      {/* Major brands — alphabetical */}
+      {/* Major brands. alphabetical */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {MAJOR_BRANDS.map((brand) => (
           <BrandTile
@@ -158,7 +158,7 @@ export function BrandPicker({
         onClick={() => setShowOther((v) => !v)}
         className="mt-3 w-full rounded-card border border-dashed border-hairline bg-white px-4 py-3 text-left text-[14px] text-muted transition-colors hover:border-ink hover:text-ink"
       >
-        Other — name the builder
+        Other. name the builder
       </button>
 
       {showOther && (

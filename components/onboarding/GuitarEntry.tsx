@@ -37,7 +37,7 @@ export function guitarLabel(g: GuitarSpec): string {
 }
 
 /**
- * Full spec capture for one guitar. Brand drives the model list — major brands
+ * Full spec capture for one guitar. Brand drives the model list. major brands
  * expose their $3,000+ model lines, boutique builders expose the body styles
  * they build, and a write-in brand falls back to the standard shape list.
  */
@@ -51,7 +51,7 @@ export function GuitarEntry({
   onRemove?: () => void;
 }) {
   const [customBrand, setCustomBrand] = useState(
-    Boolean(value.brand) && !isKnownBrand(value.brand)
+    Boolean(value.brand) && !isKnownBrand(value.brand),
   );
 
   function set<K extends keyof GuitarSpec>(key: K, v: GuitarSpec[K]) {
@@ -182,7 +182,10 @@ export function GuitarEntry({
             className="fret-input"
             value={value.yearBuilt}
             onChange={(e) =>
-              set("yearBuilt", e.target.value.replace(/[^0-9]/g, "").slice(0, 4))
+              set(
+                "yearBuilt",
+                e.target.value.replace(/[^0-9]/g, "").slice(0, 4),
+              )
             }
             placeholder="1968"
             inputMode="numeric"
@@ -270,6 +273,6 @@ function Labeled({
 function isKnownBrand(name: string): boolean {
   const lower = name.toLowerCase();
   return [...MAJOR_BRANDS, ...BOUTIQUE_BRANDS].some(
-    (b) => b.name.toLowerCase() === lower
+    (b) => b.name.toLowerCase() === lower,
   );
 }

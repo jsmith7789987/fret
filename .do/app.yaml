@@ -17,6 +17,11 @@ services:
     http_port: 3000
     routes:
       - path: /
+    health_check:
+      http_path: /api/health
+      initial_delay_seconds: 20
+      period_seconds: 30
+      failure_threshold: 3
     envs:
       - key: DATABASE_URL
         scope: RUN_AND_BUILD_TIME
@@ -33,6 +38,9 @@ services:
       - key: ANTHROPIC_API_KEY
         scope: RUN_TIME
         type: SECRET
+      - key: ANTHROPIC_MODEL
+        scope: RUN_TIME
+        value: "claude-sonnet-4-6"
       - key: CLOUDFLARE_ACCOUNT_ID
         scope: RUN_TIME
         type: SECRET
@@ -95,9 +103,24 @@ services:
         type: SECRET
 
 jobs:
-  # Warms the AI match-scoring pass on each deploy. App Platform has no native
-  # hourly scheduler, so for recurring scoring use an external cron (or a
-  # DigitalOcean Functions scheduled trigger) hitting the same endpoint:
+  # Applies pending Prisma migrations before the new build receives traffic.
+  # This is what makes the database schema part of the deploy, not a manual step.
+  - name: migrate
+    kind: PRE_DEPLOY
+    github:
+      repo: jsmith7789987/fret
+      branch: main
+    build_command: npm ci
+    run_command: npx prisma migrate deploy
+    environment_slug: node-js
+    instance_size_slug: basic-xxs
+    envs:
+      - key: DATABASE_URL
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+
+  # Match scoring runs on a schedule. App Platform has no native cron, so drive
+  # this from an external scheduler or DigitalOcean Functions:
   #   curl -X POST "$NEXT_PUBLIC_APP_URL/api/listings/score" \
   #     -H "Authorization: Bearer $CRON_SECRET"
   - name: match-scoring

@@ -30,34 +30,34 @@ enum Role {
 }
 
 model BuyerProfile {
-  id              String   @id @default(cuid())
-  userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id])
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
 
   // Raw onboarding transcript
-  onboardingText  String?
+  onboardingText String?
 
   // Extracted by AI
-  genres          String[] // e.g. ["fingerstyle", "bluegrass", "folk"]
-  brands          String[] // e.g. ["Martin", "Gibson", "Collings"]
-  currentGuitars  String?
-  dreamGuitar     String?
-  maxSpend        Int?     // in dollars
+  genres         String[] // e.g. ["fingerstyle", "bluegrass", "folk"]
+  brands         String[] // e.g. ["Martin", "Gibson", "Collings"]
+  currentGuitars String?
+  dreamGuitar    String?
+  maxSpend       Int? // in dollars
 
   // Structured picks from onboarding
-  models          String[] // specific models/body styles the buyer selected
-  bodyShapes      String[] // preferred body shapes
-  topWoods        String[] // preferred top tonewoods
-  backSidesWoods  String[] // preferred back/sides tonewoods
+  models         String[] // specific models/body styles the buyer selected
+  bodyShapes     String[] // preferred body shapes
+  topWoods       String[] // preferred top tonewoods
+  backSidesWoods String[] // preferred back/sides tonewoods
 
   // Guitars owned / being chased, entered as structured records
-  guitars         ProfileGuitar[]
+  guitars ProfileGuitar[]
 
   // Sophistication signal
-  sophistication  Int      @default(1) // 1-5, set by AI during extraction
+  sophistication Int @default(1) // 1-5, set by AI during extraction
 
-  updatedAt       DateTime @updatedAt
-  createdAt       DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
 }
 
 enum GuitarSlot {
@@ -67,11 +67,11 @@ enum GuitarSlot {
 
 /// A specific guitar a buyer owns or is chasing, captured with full specs.
 model ProfileGuitar {
-  id            String       @id @default(cuid())
-  profileId     String
-  profile       BuyerProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  id        String       @id @default(cuid())
+  profileId String
+  profile   BuyerProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  slot          GuitarSlot   @default(OWNED)
+  slot GuitarSlot @default(OWNED)
 
   brand         String
   model         String?
@@ -82,7 +82,7 @@ model ProfileGuitar {
   serialNumber  String?
   description   String?
 
-  createdAt     DateTime     @default(now())
+  createdAt DateTime @default(now())
 
   @@index([profileId])
 }
@@ -103,22 +103,22 @@ model BrandSuggestion {
 }
 
 model Listing {
-  id            String        @id @default(cuid())
-  sellerId      String
-  seller        User          @relation(fields: [sellerId], references: [id])
+  id       String @id @default(cuid())
+  sellerId String
+  seller   User   @relation(fields: [sellerId], references: [id])
 
   // Guitar details
-  brand         String
-  model         String
-  year          Int?
-  finish        String?
-  condition     Condition
-  description   String
-  price         Int           // in dollars
-  city          String?
-  state         String?
+  brand       String
+  model       String
+  year        Int?
+  finish      String?
+  condition   Condition
+  description String
+  price       Int // in dollars
+  city        String?
+  state       String?
 
-  // Build specs — captured for every guitar on the site.
+  // Build specs captured for every guitar on the site.
   // Serial number is mandatory for all listings.
   serialNumber    String
   bodyShape       String?
@@ -135,28 +135,28 @@ model Listing {
   countryOfOrigin String?
   modifications   String?
 
-  // Condition detail — seller writes it, AI condenses it. Raw text is kept.
-  wearAndTear   String?
-  wearSummary   String?
+  // Condition detail. The seller writes it, AI condenses it. Raw text is kept.
+  wearAndTear String?
+  wearSummary String?
 
   // Media
-  videoId       String?       // Cloudflare Stream video ID
-  videoThumb    String?       // Cloudflare Stream thumbnail URL
-  photos        String[]      // R2 URLs
+  videoId    String? // Cloudflare Stream video ID
+  videoThumb String? // Cloudflare Stream thumbnail URL
+  photos     String[] // R2 URLs
 
   // Status
-  status        ListingStatus @default(PENDING_PAYMENT)
-  tier          ListingTier   @default(STANDARD)
+  status ListingStatus @default(PENDING_PAYMENT)
+  tier   ListingTier   @default(STANDARD)
 
   // Payment
   stripeSessionId String?
 
-  // Match scores — updated by cron
-  matchScores   MatchScore[]
-  savedBy       SavedListing[]
+  // Match scores, updated by cron
+  matchScores MatchScore[]
+  savedBy     SavedListing[]
 
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Condition {
@@ -177,20 +177,20 @@ enum ListingStatus {
 }
 
 enum ListingTier {
-  STANDARD // under $2,500 — $25 list fee
-  PREMIUM // $2,500+ — $50 list fee
-  DEALER // dealer accounts — $25 flat, no back-end fee
+  STANDARD // under $2,500. $25 list fee
+  PREMIUM // $2,500+. $50 list fee
+  DEALER // dealer accounts. $25 flat, no back-end fee
 }
 
 model MatchScore {
-  id          String   @id @default(cuid())
-  listingId   String
-  listing     Listing  @relation(fields: [listingId], references: [id])
-  buyerId     String
-  score       Int      // 0–100
-  alertSent   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  buyerId   String
+  score     Int // 0–100
+  alertSent Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([listingId, buyerId])
 }

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { extractProfile, type ExtractedProfile } from "@/lib/anthropic";
 import { prisma } from "@/lib/prisma";
-import { getCurrentDbUser, isOfflineUser } from "@/lib/auth";
+import { requireApiUser } from "@/lib/auth";
 
 interface GuitarPayload {
   brand?: string;
@@ -54,13 +54,11 @@ function strings(list: unknown, limit = 60): string[] {
 }
 
 export async function POST(req: Request) {
-  const user = await getCurrentDbUser();
-  if (isOfflineUser(user)) {
-    return NextResponse.json(
-      { error: "Database unavailable — try again shortly." },
-      { status: 503 }
-    );
+  const auth = await requireApiUser();
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
+  const user = auth.user;
 
   let onboardingText = "";
   let structured: StructuredPayload = {};
@@ -78,17 +76,20 @@ export async function POST(req: Request) {
   if (!onboardingText) {
     return NextResponse.json(
       { error: "onboardingText is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
-  // AI extraction is best-effort — the structured picks are the source of
+  // AI extraction is best-effort. the structured picks are the source of
   // truth, so a transient API failure shouldn't lose the buyer's whole session.
   let extracted: ExtractedProfile | null = null;
   try {
     extracted = await extractProfile(onboardingText);
   } catch (err) {
-    console.error("Profile extraction failed, saving structured data only:", err);
+    console.error(
+      "Profile extraction failed, saving structured data only:",
+      err,
+    );
   }
 
   const pickedBrands = strings(structured.brands);

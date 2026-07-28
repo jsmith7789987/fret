@@ -59,7 +59,8 @@ const HEADINGS: Record<Step, { title: string; sub: string }> = {
     sub: "The one you'd buy without thinking twice.",
   },
   spend: {
-    title: "If the right guitar appeared tomorrow, what's the most you'd spend?",
+    title:
+      "If the right guitar appeared tomorrow, what's the most you'd spend?",
     sub: `Everything on fret. starts at $${MIN_NEW_PRICE.toLocaleString("en-US")}.`,
   },
 };
@@ -183,7 +184,7 @@ export function ProfileForm() {
     else setStepIndex((i) => Math.min(i + 1, STEPS.length - 1));
   }
 
-  // Only the final question is required — everything else can be skipped.
+  // Only the final question is required. everything else can be skipped.
   const canAdvance = !isLast || maxSpend.trim() !== "";
   const heading = HEADINGS[step];
 
@@ -297,7 +298,7 @@ export function ProfileForm() {
             </div>
             {maxSpend !== "" && Number(maxSpend) < MIN_NEW_PRICE && (
               <p className="mt-3 rounded-card border border-amber-border bg-amber-bg px-4 py-2 text-[12px] text-amber-text">
-                Heads up — fret. inventory starts around $
+                Heads up. fret. inventory starts around $
                 {MIN_NEW_PRICE.toLocaleString("en-US")}. We&apos;ll still show
                 you what we can.
               </p>

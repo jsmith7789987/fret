@@ -1,9 +1,13 @@
 import { Nav } from "@/components/Nav";
 import { SellFlow } from "@/components/sell/SellFlow";
+import { requireUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
-export default function SellPage() {
+export default async function SellPage() {
+  // Any signed-in account may list. Ownership is enforced per listing.
+  await requireUser("/sell");
+
   return (
     <div className="min-h-screen bg-canvas">
       <Nav />

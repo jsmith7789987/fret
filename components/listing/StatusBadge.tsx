@@ -1,7 +1,10 @@
 import type { ListingStatus } from "@prisma/client";
 
 const STYLES: Record<ListingStatus, { label: string; cls: string }> = {
-  ACTIVE: { label: "Active", cls: "bg-amber-bg text-amber-text ring-amber-border" },
+  ACTIVE: {
+    label: "Active",
+    cls: "bg-amber-bg text-amber-text ring-amber-border",
+  },
   PENDING_PAYMENT: {
     label: "Pending payment",
     cls: "bg-canvas text-muted ring-hairline",

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import { DM_Serif_Display, Inter } from "next/font/google";
 import "./globals.css";
 
@@ -16,21 +17,34 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "fret. — the guitar marketplace",
+  title: "fret. the boutique guitar marketplace",
   description:
-    "A curated, video-first marketplace for serious acoustic guitars. Matched to you.",
+    "A curated marketplace for boutique, high-end, and vintage guitars. Matched to you, priced to sell.",
 };
+
+// Clerk needs a publishable key to render. Publishable keys are public, not
+// secrets. Fall back to a non-functional placeholder so a deployment without
+// credentials still builds and serves the public pages. The health check
+// reports whether real credentials are present.
+const PLACEHOLDER_PUBLISHABLE_KEY =
+  "pk_test_ZXhhbXBsZS5jbGVyay5hY2NvdW50cy5kZXYk";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const publishableKey =
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
+    PLACEHOLDER_PUBLISHABLE_KEY;
+
   return (
-    <html lang="en" className={`${dmSerif.variable} ${inter.variable}`}>
-      <body className="min-h-screen bg-canvas font-sans text-ink antialiased">
-        {children}
-      </body>
-    </html>
+    <ClerkProvider publishableKey={publishableKey}>
+      <html lang="en" className={`${dmSerif.variable} ${inter.variable}`}>
+        <body className="min-h-screen bg-canvas font-sans text-ink antialiased">
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

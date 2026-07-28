@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentDbUser, isOfflineUser } from "@/lib/auth";
+import { requireApiUser } from "@/lib/auth";
 import { sendContactEmail } from "@/lib/resend";
 
 export async function POST(req: Request) {
-  const user = await getCurrentDbUser();
-  if (isOfflineUser(user)) {
-    return NextResponse.json(
-      { error: "Database unavailable — try again shortly." },
-      { status: 503 }
-    );
+  const auth = await requireApiUser();
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
+  const user = auth.user;
 
   let listingId = "";
   let message = "";
@@ -28,7 +26,7 @@ export async function POST(req: Request) {
   if (!listingId || !message) {
     return NextResponse.json(
       { error: "listingId and message are required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -51,7 +49,7 @@ export async function POST(req: Request) {
     console.error("Contact email failed:", err);
     return NextResponse.json(
       { error: "Could not send message" },
-      { status: 502 }
+      { status: 502 },
     );
   }
 

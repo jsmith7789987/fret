@@ -20,7 +20,7 @@ function authorized(req: Request): boolean {
 
 async function scorePair(
   listing: Listing,
-  buyer: BuyerWithUser
+  buyer: BuyerWithUser,
 ): Promise<void> {
   const score = await scoreMatch(
     {
@@ -37,7 +37,7 @@ async function scorePair(
       dreamGuitar: buyer.dreamGuitar,
       maxSpend: buyer.maxSpend,
       sophistication: buyer.sophistication,
-    }
+    },
   );
 
   const existing = await prisma.matchScore.findUnique({
@@ -122,7 +122,7 @@ export async function POST(req: Request) {
     } catch (err) {
       console.error(
         `Scoring failed for listing ${listing.id} / buyer ${buyer.userId}:`,
-        err
+        err,
       );
     }
   });

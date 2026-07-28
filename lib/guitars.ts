@@ -1,7 +1,7 @@
 /**
  * fret. guitar catalog
  *
- * Acoustic-only, luxury-only. The floor for the whole site is $3,000 new —
+ * Acoustic-only, luxury-only. The floor for the whole site is $3,000 new.
  * every model listed here is a guitar that sold new above that mark, so the
  * cheap end of each brand's line (Martin X/Road/15/16 series, Taylor Academy/
  * GS Mini/100–400 series, Gibson Studio/Generation, Bourgeois Touchstone,
@@ -23,12 +23,12 @@ export interface Brand {
    * BOUTIQUE builders: the body styles they're known for (see `shapes`).
    */
   models?: string[];
-  /** For boutique builders — what kinds they normally make. */
+  /** For boutique builders, the kinds they normally make. */
   shapes?: string[];
 }
 
 // ---------------------------------------------------------------------------
-// Standard body shapes — offered for "Other" / custom builders, and as the
+// Standard body shapes, offered for "Other" and custom builders, and as the
 // preference vocabulary throughout onboarding.
 // ---------------------------------------------------------------------------
 
@@ -202,7 +202,7 @@ export const COUNTRIES = [
 ] as const;
 
 // ---------------------------------------------------------------------------
-// MAJOR luxury brands — alphabetical
+// MAJOR luxury brands. alphabetical
 // ---------------------------------------------------------------------------
 
 export const MAJOR_BRANDS: Brand[] = [
@@ -210,7 +210,7 @@ export const MAJOR_BRANDS: Brand[] = [
     slug: "bourgeois",
     name: "Bourgeois",
     tier: "MAJOR",
-    blurb: "Dana Bourgeois — Lewiston, Maine",
+    blurb: "Dana Bourgeois, Lewiston, Maine",
     models: [
       "Aged Tone Vintage D",
       "Aged Tone Vintage OM",
@@ -240,7 +240,7 @@ export const MAJOR_BRANDS: Brand[] = [
     slug: "collings",
     name: "Collings",
     tier: "MAJOR",
-    blurb: "Austin, Texas — obsessive consistency",
+    blurb: "Austin, Texas. Obsessive consistency",
     models: [
       "D1",
       "D1A",
@@ -285,7 +285,7 @@ export const MAJOR_BRANDS: Brand[] = [
     slug: "gibson",
     name: "Gibson",
     tier: "MAJOR",
-    blurb: "Bozeman, Montana — round shoulders and thump",
+    blurb: "Bozeman, Montana. Round shoulders and thump",
     models: [
       "J-45 Standard",
       "J-45 Original",
@@ -319,7 +319,7 @@ export const MAJOR_BRANDS: Brand[] = [
     slug: "martin",
     name: "Martin",
     tier: "MAJOR",
-    blurb: "Nazareth, Pennsylvania — Standard Series and above",
+    blurb: "Nazareth, Pennsylvania. Standard Series and above",
     models: [
       "D-18",
       "D-28",
@@ -361,7 +361,7 @@ export const MAJOR_BRANDS: Brand[] = [
     slug: "santa-cruz",
     name: "Santa Cruz",
     tier: "MAJOR",
-    blurb: "Richard Hoover — Santa Cruz, California",
+    blurb: "Richard Hoover. Santa Cruz, California",
     models: [
       "D",
       "D/PW (Pre-War)",
@@ -395,7 +395,7 @@ export const MAJOR_BRANDS: Brand[] = [
     slug: "taylor",
     name: "Taylor",
     tier: "MAJOR",
-    blurb: "El Cajon, California — 700 Series and above",
+    blurb: "El Cajon, California. 700 Series and above",
     models: [
       "714ce",
       "717e",
@@ -425,7 +425,7 @@ export const MAJOR_BRANDS: Brand[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// BOUTIQUE builders — the top 30, with the body styles they normally make.
+// BOUTIQUE builders. the top 30, with the body styles they normally make.
 // ---------------------------------------------------------------------------
 
 export const BOUTIQUE_BRANDS: Brand[] = [
@@ -440,21 +440,21 @@ export const BOUTIQUE_BRANDS: Brand[] = [
     slug: "bashkin",
     name: "Bashkin",
     tier: "BOUTIQUE",
-    blurb: "Michael Bashkin — Fort Collins, CO",
+    blurb: "Michael Bashkin. Fort Collins, CO",
     shapes: ["OM", "00", "Placencia", "Grand Concert"],
   },
   {
     slug: "beneteau",
     name: "Beneteau",
     tier: "BOUTIQUE",
-    blurb: "Marc Beneteau — Ontario",
+    blurb: "Marc Beneteau. Ontario",
     shapes: ["OM", "Dreadnought", "Grand Concert", "Jumbo"],
   },
   {
     slug: "borges",
     name: "Borges",
     tier: "BOUTIQUE",
-    blurb: "Julius Borges — pre-war voicing",
+    blurb: "Julius Borges. pre-war voicing",
     shapes: ["Dreadnought", "OM", "000", "12-Fret"],
   },
   {
@@ -468,14 +468,14 @@ export const BOUTIQUE_BRANDS: Brand[] = [
     slug: "charis",
     name: "Charis",
     tier: "BOUTIQUE",
-    blurb: "Bill Wise — Michigan",
+    blurb: "Bill Wise. Michigan",
     shapes: ["SJ", "OM", "Dreadnought", "Grand Concert"],
   },
   {
     slug: "circa",
     name: "Circa",
     tier: "BOUTIQUE",
-    blurb: "John Slobod — pre-war dreadnoughts",
+    blurb: "John Slobod. pre-war dreadnoughts",
     shapes: ["Dreadnought", "OM", "000", "Slope-Shoulder Dreadnought"],
   },
   {
@@ -489,14 +489,14 @@ export const BOUTIQUE_BRANDS: Brand[] = [
     slug: "froggy-bottom",
     name: "Froggy Bottom",
     tier: "BOUTIQUE",
-    blurb: "Michael Millard — Vermont",
+    blurb: "Michael Millard. Vermont",
     shapes: ["H12", "H13", "K", "L", "M", "P (Parlor)", "Dreadnought"],
   },
   {
     slug: "goodall",
     name: "Goodall",
     tier: "BOUTIQUE",
-    blurb: "James Goodall — Hawaii / California",
+    blurb: "James Goodall. Hawaii / California",
     shapes: [
       "Grand Concert",
       "Standard",
@@ -510,14 +510,14 @@ export const BOUTIQUE_BRANDS: Brand[] = [
     slug: "greenfield",
     name: "Greenfield",
     tier: "BOUTIQUE",
-    blurb: "Michael Greenfield — Montréal",
+    blurb: "Michael Greenfield. Montréal",
     shapes: ["G1", "G2", "G3", "G4"],
   },
   {
     slug: "hoffman",
     name: "Hoffman",
     tier: "BOUTIQUE",
-    blurb: "Charlie Hoffman — Minneapolis",
+    blurb: "Charlie Hoffman. Minneapolis",
     shapes: ["OM", "000", "Dreadnought", "Parlor"],
   },
   {
@@ -525,41 +525,50 @@ export const BOUTIQUE_BRANDS: Brand[] = [
     name: "Huss & Dalton",
     tier: "BOUTIQUE",
     blurb: "Staunton, Virginia",
-    shapes: ["D", "DS", "CM", "OM", "00", "T-0014", "Crossroads", "Road Edition"],
+    shapes: [
+      "D",
+      "DS",
+      "CM",
+      "OM",
+      "00",
+      "T-0014",
+      "Crossroads",
+      "Road Edition",
+    ],
   },
   {
     slug: "kinnaird",
     name: "Kinnaird",
     tier: "BOUTIQUE",
-    blurb: "Steve Kinnaird — Texas",
+    blurb: "Steve Kinnaird. Texas",
     shapes: ["OM", "000", "Dreadnought", "Grand Concert"],
   },
   {
     slug: "kopp",
     name: "Kopp",
     tier: "BOUTIQUE",
-    blurb: "Kevin Kopp — Montana",
+    blurb: "Kevin Kopp. Montana",
     shapes: ["K-35", "DB", "Sunburst Dreadnought", "OM", "000"],
   },
   {
     slug: "kostal",
     name: "Kostal",
     tier: "BOUTIQUE",
-    blurb: "Jason Kostal — Arizona",
+    blurb: "Jason Kostal. Arizona",
     shapes: ["MJ", "OM", "MD (Modified Dreadnought)", "00", "Dreadnought"],
   },
   {
     slug: "lowden",
     name: "Lowden",
     tier: "BOUTIQUE",
-    blurb: "George Lowden — Northern Ireland",
+    blurb: "George Lowden. Northern Ireland",
     shapes: ["O", "F", "S", "WL (Wee Lowden)", "Pierre Bensusan Signature"],
   },
   {
     slug: "manzer",
     name: "Manzer",
     tier: "BOUTIQUE",
-    blurb: "Linda Manzer — Toronto",
+    blurb: "Linda Manzer. Toronto",
     shapes: ["Absolute", "Cowpoke", "Blue Note", "Dreadnought", "Parlor"],
   },
   {
@@ -573,14 +582,14 @@ export const BOUTIQUE_BRANDS: Brand[] = [
     slug: "merrill",
     name: "Merrill",
     tier: "BOUTIQUE",
-    blurb: "Jim Merrill — pre-war reproductions",
+    blurb: "Jim Merrill. pre-war reproductions",
     shapes: ["Dreadnought", "OM", "000", "12-Fret"],
   },
   {
     slug: "olson",
     name: "Olson",
     tier: "BOUTIQUE",
-    blurb: "James Olson — Minnesota",
+    blurb: "James Olson. Minnesota",
     shapes: ["SJ", "Dreadnought", "Small Jumbo", "Cutaway SJ"],
   },
   {
@@ -594,7 +603,7 @@ export const BOUTIQUE_BRANDS: Brand[] = [
     slug: "petros",
     name: "Petros",
     tier: "BOUTIQUE",
-    blurb: "Bruce & Matt Petros — Wisconsin",
+    blurb: "Bruce & Matt Petros. Wisconsin",
     shapes: ["FS", "Tunnel 13", "Grand Concert", "OM", "Parlor"],
   },
   {
@@ -622,7 +631,7 @@ export const BOUTIQUE_BRANDS: Brand[] = [
     slug: "ryan",
     name: "Ryan",
     tier: "BOUTIQUE",
-    blurb: "Kevin Ryan — California",
+    blurb: "Kevin Ryan. California",
     shapes: ["Mission", "Nightingale", "Cathedral", "Paradiso", "Abbey"],
   },
   {
@@ -636,28 +645,28 @@ export const BOUTIQUE_BRANDS: Brand[] = [
     slug: "somogyi",
     name: "Somogyi",
     tier: "BOUTIQUE",
-    blurb: "Ervin Somogyi — Oakland",
+    blurb: "Ervin Somogyi. Oakland",
     shapes: ["OM", "Dreadnought", "Modified Dreadnought", "Grand Concert"],
   },
   {
     slug: "traugott",
     name: "Traugott",
     tier: "BOUTIQUE",
-    blurb: "Jeff Traugott — Santa Cruz",
+    blurb: "Jeff Traugott. Santa Cruz",
     shapes: ["Model R", "Model BK", "00", "OM"],
   },
   {
     slug: "walker",
     name: "Kim Walker",
     tier: "BOUTIQUE",
-    blurb: "Kim Walker — Connecticut",
+    blurb: "Kim Walker. Connecticut",
     shapes: ["Dreadnought", "OM", "000", "Slope-Shoulder Dreadnought"],
   },
   {
     slug: "wingert",
     name: "Wingert",
     tier: "BOUTIQUE",
-    blurb: "Kathy Wingert — California",
+    blurb: "Kathy Wingert. California",
     shapes: ["Model E", "Model C", "OM", "00", "Parlor"],
   },
 ];
@@ -671,7 +680,7 @@ export const ALL_BRANDS: Brand[] = [...MAJOR_BRANDS, ...BOUTIQUE_BRANDS];
 export function findBrand(nameOrSlug: string): Brand | undefined {
   const needle = normalizeBrandName(nameOrSlug);
   return ALL_BRANDS.find(
-    (b) => b.slug === needle || normalizeBrandName(b.name) === needle
+    (b) => b.slug === needle || normalizeBrandName(b.name) === needle,
   );
 }
 
@@ -706,7 +715,7 @@ export function prettyBrandName(name: string): string {
     .map((word) =>
       word === word.toUpperCase() && word.length > 1
         ? word
-        : word.charAt(0).toUpperCase() + word.slice(1)
+        : word.charAt(0).toUpperCase() + word.slice(1),
     )
     .join(" ");
 }

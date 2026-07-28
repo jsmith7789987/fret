@@ -27,7 +27,9 @@ export function BrowseGrid({ listings }: { listings: ListingCardData[] }) {
       case "brand":
         return listings.filter((l) => l.brand === filter.value);
       case "vintage":
-        return listings.filter((l) => l.year != null && l.year < VINTAGE_BEFORE);
+        return listings.filter(
+          (l) => l.year != null && l.year < VINTAGE_BEFORE,
+        );
       case "under":
         return listings.filter((l) => l.price < 2500);
       case "video":
@@ -47,7 +49,10 @@ export function BrowseGrid({ listings }: { listings: ListingCardData[] }) {
   return (
     <div>
       <div className="mb-6 flex flex-wrap gap-2">
-        <Chip active={isActive({ kind: "all" })} onClick={() => setFilter({ kind: "all" })}>
+        <Chip
+          active={isActive({ kind: "all" })}
+          onClick={() => setFilter({ kind: "all" })}
+        >
           All
         </Chip>
         {brands.map((brand) => (
@@ -59,13 +64,22 @@ export function BrowseGrid({ listings }: { listings: ListingCardData[] }) {
             {brand}
           </Chip>
         ))}
-        <Chip active={isActive({ kind: "vintage" })} onClick={() => setFilter({ kind: "vintage" })}>
+        <Chip
+          active={isActive({ kind: "vintage" })}
+          onClick={() => setFilter({ kind: "vintage" })}
+        >
           Vintage
         </Chip>
-        <Chip active={isActive({ kind: "under" })} onClick={() => setFilter({ kind: "under" })}>
+        <Chip
+          active={isActive({ kind: "under" })}
+          onClick={() => setFilter({ kind: "under" })}
+        >
           Under $2,500
         </Chip>
-        <Chip active={isActive({ kind: "video" })} onClick={() => setFilter({ kind: "video" })}>
+        <Chip
+          active={isActive({ kind: "video" })}
+          onClick={() => setFilter({ kind: "video" })}
+        >
           With video
         </Chip>
       </div>

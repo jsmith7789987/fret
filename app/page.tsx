@@ -40,14 +40,22 @@ export default function HomePage() {
         <p className="mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-muted">
           fret. is an acoustic-only marketplace for serious instruments, with
           AI-powered matching. Tell us how you play and what you&apos;re
-          chasing — we surface the guitars worth your attention, and text you
-          the moment the right one lists.
+          chasing. we surface the guitars worth your attention, and text you the
+          moment the right one lists.
         </p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-          <ButtonLink href="/onboarding" variant="primary" className="px-5 py-2.5">
+          <ButtonLink
+            href="/onboarding"
+            variant="primary"
+            className="px-5 py-2.5"
+          >
             Build my profile
           </ButtonLink>
-          <ButtonLink href="/browse" variant="secondary" className="px-5 py-2.5">
+          <ButtonLink
+            href="/browse"
+            variant="secondary"
+            className="px-5 py-2.5"
+          >
             Browse inventory
           </ButtonLink>
           <ButtonLink href="/sell" variant="secondary" className="px-5 py-2.5">
@@ -69,7 +77,7 @@ export default function HomePage() {
           },
           {
             title: "Alerts that matter",
-            body: "When a guitar lists above your match threshold, you get a text — before anyone else scrolls past it.",
+            body: "When a guitar lists above your match threshold, you get a text. before anyone else scrolls past it.",
           },
         ].map((card) => (
           <div

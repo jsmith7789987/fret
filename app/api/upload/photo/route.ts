@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { getPhotoUploadUrl } from "@/lib/cloudflare";
-import { getCurrentDbUser } from "@/lib/auth";
+import { requireApiUser } from "@/lib/auth";
 
 const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/avif"];
 
 export async function POST(req: Request) {
-  const user = await getCurrentDbUser();
+  const auth = await requireApiUser();
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+  const user = auth.user;
   let contentType = "image/jpeg";
   let ext = "jpg";
   try {
@@ -25,7 +29,7 @@ export async function POST(req: Request) {
   if (!ALLOWED.includes(contentType)) {
     return NextResponse.json(
       { error: "Unsupported image type" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -38,7 +42,7 @@ export async function POST(req: Request) {
     console.error("Photo upload URL failed:", err);
     return NextResponse.json(
       { error: "Could not create upload URL" },
-      { status: 502 }
+      { status: 502 },
     );
   }
 }

@@ -1,9 +1,9 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Nav } from "@/components/Nav";
 import { VideoPlayer } from "@/components/listing/VideoPlayer";
 import { ContactSeller } from "@/components/listing/ContactSeller";
 import { MatchBadge } from "@/components/ui/MatchBadge";
-import { getCurrentDbUser } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {
   formatPrice,
@@ -19,7 +19,7 @@ export default async function ListingDetailPage({
 }: {
   params: { id: string };
 }) {
-  const user = await getCurrentDbUser();
+  const user = await getCurrentUser();
 
   const listing = await prisma.listing.findUnique({
     where: { id: params.id },
@@ -28,17 +28,22 @@ export default async function ListingDetailPage({
 
   if (!listing || listing.status === "REMOVED") notFound();
 
-  const match = await prisma.matchScore.findUnique({
-    where: {
-      listingId_buyerId: { listingId: listing.id, buyerId: user.id },
-    },
-  });
+  // The match badge only means something for a signed in buyer with a profile.
+  const match = user
+    ? await prisma.matchScore.findUnique({
+        where: {
+          listingId_buyerId: { listingId: listing.id, buyerId: user.id },
+        },
+      })
+    : null;
 
   const title = [listing.year, listing.brand, listing.model]
     .filter(Boolean)
     .join(" ");
   const location = formatLocation(listing.city, listing.state);
-  const galleryPhotos = listing.videoId ? listing.photos : listing.photos.slice(1);
+  const galleryPhotos = listing.videoId
+    ? listing.photos
+    : listing.photos.slice(1);
   const heroPhoto = listing.photos[0] ?? null;
 
   const specs: [string, string][] = (
@@ -54,7 +59,10 @@ export default async function ListingDetailPage({
       ["Bracing", listing.bracing],
       ["Nut width", listing.nutWidth],
       ["Scale length", listing.scaleLength],
-      ["Finish", [listing.finish, listing.finishType].filter(Boolean).join(" · ")],
+      [
+        "Finish",
+        [listing.finish, listing.finishType].filter(Boolean).join(" · "),
+      ],
       ["Electronics", listing.electronics],
       ["Case", listing.caseType],
       ["Country of origin", listing.countryOfOrigin],
@@ -163,7 +171,10 @@ export default async function ListingDetailPage({
                 </h2>
                 <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
                   {specs.map(([label, value]) => (
-                    <div key={label} className="border-t-[0.5px] border-hairline pt-2">
+                    <div
+                      key={label}
+                      className="border-t-[0.5px] border-hairline pt-2"
+                    >
                       <dt className="text-[11px] uppercase tracking-wide text-muted">
                         {label}
                       </dt>

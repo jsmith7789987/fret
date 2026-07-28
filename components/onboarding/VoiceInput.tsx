@@ -25,10 +25,16 @@ interface SpeechRecognitionLike {
 function getRecognition(): SpeechRecognitionLike | null {
   if (typeof window === "undefined") return null;
   const Ctor =
-    (window as unknown as { webkitSpeechRecognition?: new () => SpeechRecognitionLike })
-      .webkitSpeechRecognition ??
-    (window as unknown as { SpeechRecognition?: new () => SpeechRecognitionLike })
-      .SpeechRecognition;
+    (
+      window as unknown as {
+        webkitSpeechRecognition?: new () => SpeechRecognitionLike;
+      }
+    ).webkitSpeechRecognition ??
+    (
+      window as unknown as {
+        SpeechRecognition?: new () => SpeechRecognitionLike;
+      }
+    ).SpeechRecognition;
   if (!Ctor) return null;
   try {
     return new Ctor();

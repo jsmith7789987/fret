@@ -5,20 +5,21 @@ export const dynamic = "force-dynamic";
 
 function streamConfigured(): boolean {
   return Boolean(
-    process.env.CLOUDFLARE_ACCOUNT_ID && process.env.CLOUDFLARE_STREAM_API_TOKEN
+    process.env.CLOUDFLARE_ACCOUNT_ID &&
+    process.env.CLOUDFLARE_STREAM_API_TOKEN,
   );
 }
 
 export async function POST() {
   // Distinguish "video hosting isn't set up on this deployment" from a genuine
-  // upload failure — the seller flow uses this to stay walkable either way.
+  // upload failure. The seller flow uses this to stay walkable either way.
   if (!streamConfigured()) {
     return NextResponse.json(
       {
         configured: false,
         error: "Video hosting is not configured on this deployment.",
       },
-      { status: 503 }
+      { status: 503 },
     );
   }
 
@@ -29,7 +30,7 @@ export async function POST() {
     console.error("Video upload URL failed:", err);
     return NextResponse.json(
       { configured: true, error: "Could not create upload URL" },
-      { status: 502 }
+      { status: 502 },
     );
   }
 }

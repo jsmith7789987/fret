@@ -9,7 +9,7 @@ function getClient(): twilio.Twilio {
   if (!client) {
     client = twilio(
       process.env.TWILIO_ACCOUNT_SID,
-      process.env.TWILIO_AUTH_TOKEN
+      process.env.TWILIO_AUTH_TOKEN,
     );
   }
   return client;
@@ -23,7 +23,7 @@ export async function sendMatchAlert(
     year?: number | null;
     price: number;
     id: string;
-  }
+  },
 ) {
   const guitarName = [listing.year, listing.brand, listing.model]
     .filter(Boolean)

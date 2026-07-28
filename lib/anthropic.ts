@@ -1,7 +1,18 @@
 import Anthropic from "@anthropic-ai/sdk";
 
-// The model used for all AI features (profile extraction + listing scoring).
-export const AI_MODEL = "claude-sonnet-4-6";
+/**
+ * The model used for every AI job. Configurable by env var per Section 7 of
+ * the brief, defaulting to a Sonnet-class model for cost. Read at call time so
+ * a deployment can change it without a rebuild.
+ */
+export function getModel(): string {
+  return process.env.ANTHROPIC_MODEL || "claude-sonnet-4-6";
+}
+
+/** The model version recorded alongside stored AI results, for auditing. */
+export function getModelVersion(): string {
+  return getModel();
+}
 
 let client: Anthropic | null = null;
 
@@ -60,13 +71,15 @@ Return only valid JSON.`;
  * Run AI extraction on an onboarding transcript. Returns a structured profile.
  */
 export async function extractProfile(
-  onboardingText: string
+  onboardingText: string,
 ): Promise<ExtractedProfile> {
   const anthropic = getAnthropic();
   const message = await anthropic.messages.create({
-    model: AI_MODEL,
+    model: getModel(),
     max_tokens: 1024,
-    messages: [{ role: "user", content: buildExtractionPrompt(onboardingText) }],
+    messages: [
+      { role: "user", content: buildExtractionPrompt(onboardingText) },
+    ],
   });
 
   const raw = message.content
@@ -108,7 +121,7 @@ export interface ScoreBuyerInput {
 
 export function buildScoringPrompt(
   listing: ScoreListingInput,
-  buyer: ScoreBuyerInput
+  buyer: ScoreBuyerInput,
 ): string {
   return `Score how well this guitar listing matches this buyer profile. Return a single integer 0-100.
 
@@ -129,7 +142,7 @@ Buyer profile:
 
 Scoring factors:
 - Brand match (high weight)
-- Price vs maxSpend (hard cutoff — if price > maxSpend, score cannot exceed 40)
+- Price vs maxSpend (hard cutoff: if price > maxSpend, score cannot exceed 40)
 - Genre/style fit based on guitar type
 - Condition vs sophistication (experts care more)
 - How close to dream guitar description
@@ -142,11 +155,11 @@ Return only the integer, nothing else.`;
  */
 export async function scoreMatch(
   listing: ScoreListingInput,
-  buyer: ScoreBuyerInput
+  buyer: ScoreBuyerInput,
 ): Promise<number> {
   const anthropic = getAnthropic();
   const message = await anthropic.messages.create({
-    model: AI_MODEL,
+    model: getModel(),
     max_tokens: 16,
     messages: [{ role: "user", content: buildScoringPrompt(listing, buyer) }],
   });
@@ -203,7 +216,7 @@ Return only the summary text, with no preamble.`;
 export async function summarizeWear(input: WearSummaryInput): Promise<string> {
   const anthropic = getAnthropic();
   const message = await anthropic.messages.create({
-    model: AI_MODEL,
+    model: getModel(),
     max_tokens: 512,
     messages: [{ role: "user", content: buildWearPrompt(input) }],
   });
@@ -221,10 +234,10 @@ function clampSophistication(value: unknown): number {
 }
 
 function stripJsonFences(text: string): string {
-  // Strip ```json ... ``` fences if the model wrapped its output.
+  // Strip ```json .. ``` fences if the model wrapped its output.
   const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/);
   if (fenced) return fenced[1].trim();
-  // Otherwise grab the first {...} block.
+  // Otherwise grab the first {..} block.
   const brace = text.match(/\{[\s\S]*\}/);
   return brace ? brace[0] : text;
 }

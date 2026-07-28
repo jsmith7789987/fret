@@ -12,7 +12,7 @@ import {
  * real model lines ($3,000+ new only); boutique builders get the body styles
  * they normally make; unrecognized write-ins fall back to standard shapes.
  *
- * Values are namespaced "Brand — Model" so selections stay unambiguous.
+ * Values are namespaced "Brand. Model" so selections stay unambiguous.
  */
 export function ModelPicker({
   brands,
@@ -35,7 +35,7 @@ export function ModelPicker({
     onChange(
       selected.includes(value)
         ? selected.filter((v) => v !== value)
-        : [...selected, value]
+        : [...selected, value],
     );
   }
 
@@ -62,7 +62,7 @@ export function ModelPicker({
             </div>
             <div className="flex flex-wrap gap-2">
               {options.map((option) => {
-                const value = `${brandName} — ${option}`;
+                const value = `${brandName}. ${option}`;
                 const active = selected.includes(value);
                 return (
                   <button
@@ -85,10 +85,9 @@ export function ModelPicker({
       })}
 
       <p className="text-[12px] text-muted">
-        Nothing on fret. sold for under $
-        {MIN_NEW_PRICE.toLocaleString("en-US")} new, so the entry-level lines
-        aren&apos;t listed. Custom and one-off builds fall back to the{" "}
-        {BODY_SHAPES.length} standard body styles.
+        Nothing on fret. sold for under ${MIN_NEW_PRICE.toLocaleString("en-US")}{" "}
+        new, so the entry-level lines aren&apos;t listed. Custom and one-off
+        builds fall back to the {BODY_SHAPES.length} standard body styles.
       </p>
     </div>
   );

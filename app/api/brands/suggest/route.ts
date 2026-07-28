@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentDbUser, isOfflineUser } from "@/lib/auth";
+import { requireApiUser } from "@/lib/auth";
 import {
   normalizeBrandName,
   prettyBrandName,
@@ -14,13 +14,11 @@ import {
  * brand is promoted into the boutique picker for everyone.
  */
 export async function POST(req: Request) {
-  const user = await getCurrentDbUser();
-  if (isOfflineUser(user)) {
-    return NextResponse.json(
-      { error: "Database unavailable — try again shortly." },
-      { status: 503 }
-    );
+  const auth = await requireApiUser();
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
+  const user = auth.user;
 
   let name = "";
   try {
@@ -34,7 +32,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid brand name" }, { status: 400 });
   }
 
-  // Already a catalog brand — nothing to track.
+  // Already a catalog brand. nothing to track.
   if (findBrand(name)) {
     return NextResponse.json({ promoted: true, count: null, known: true });
   }

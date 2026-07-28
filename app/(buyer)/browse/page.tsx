@@ -3,26 +3,35 @@ import { Nav } from "@/components/Nav";
 import { AlertBar } from "@/components/ui/AlertBar";
 import { BrowseGrid } from "@/components/listing/BrowseGrid";
 import type { ListingCardData } from "@/components/listing/ListingCard";
-import { getCurrentDbUser } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatPrice, relativeTime } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
 export default async function BrowsePage() {
-  const user = await getCurrentDbUser();
-
-  // Browse works with or without a profile. Without one, listings are simply
-  // unranked and a prompt to build a profile is shown. A database outage
-  // degrades to an empty grid rather than a 500.
-  let profile: Awaited<ReturnType<typeof prisma.buyerProfile.findUnique>> = null;
-  let scores: { listingId: string; score: number; createdAt: Date; updatedAt: Date }[] = [];
+  // Browse is public. An anonymous visitor gets a recent-first grid. A signed
+  // in buyer with a profile gets match ranking. A database outage degrades to
+  // an empty grid rather than a 500.
+  const user = await getCurrentUser();
+  let profile: Awaited<ReturnType<typeof prisma.buyerProfile.findUnique>> =
+    null;
+  let scores: {
+    listingId: string;
+    score: number;
+    createdAt: Date;
+    updatedAt: Date;
+  }[] = [];
   let listings: Awaited<ReturnType<typeof prisma.listing.findMany>> = [];
 
   try {
     [profile, scores, listings] = await Promise.all([
-      prisma.buyerProfile.findUnique({ where: { userId: user.id } }),
-      prisma.matchScore.findMany({ where: { buyerId: user.id } }),
+      user
+        ? prisma.buyerProfile.findUnique({ where: { userId: user.id } })
+        : Promise.resolve(null),
+      user
+        ? prisma.matchScore.findMany({ where: { buyerId: user.id } })
+        : Promise.resolve([]),
       prisma.listing.findMany({
         where: { status: "ACTIVE" },
         orderBy: { createdAt: "desc" },
@@ -57,7 +66,7 @@ export default async function BrowsePage() {
   // New high-match listings in the last 24h drive the alert bar.
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
   const newMatchCount = scores.filter(
-    (s) => s.score >= 85 && s.createdAt >= since
+    (s) => s.score >= 85 && s.createdAt >= since,
   ).length;
 
   const lastUpdated = scores.reduce<Date | null>((acc, s) => {

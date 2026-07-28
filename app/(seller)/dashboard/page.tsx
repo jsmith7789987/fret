@@ -5,13 +5,13 @@ import {
   SellerListingRow,
   type SellerRowData,
 } from "@/components/listing/SellerListingRow";
-import { getCurrentDbUser } from "@/lib/auth";
+import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export default async function SellerDashboardPage() {
-  const user = await getCurrentDbUser();
+  const user = await requireUser("/dashboard");
 
   // Degrade to an empty dashboard if the database is unreachable.
   const listings = await prisma.listing
@@ -38,7 +38,7 @@ export default async function SellerDashboardPage() {
     matchCount: l.matchScores.filter((m) => m.score >= 70).length,
     topScore: l.matchScores.reduce<number | null>(
       (acc, m) => (acc == null || m.score > acc ? m.score : acc),
-      null
+      null,
     ),
   }));
 

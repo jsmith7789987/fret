@@ -22,7 +22,13 @@ export interface ListingCardData {
 function VideoBadge() {
   return (
     <span className="inline-flex items-center gap-1 rounded-[20px] bg-ink/85 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur">
-      <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <svg
+        width="9"
+        height="9"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        aria-hidden
+      >
         <polygon points="5 3 19 12 5 21 5 3" />
       </svg>
       video
@@ -61,7 +67,15 @@ export function ListingCard({ listing }: { listing: ListingCardData }) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-muted">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" aria-hidden>
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1"
+              aria-hidden
+            >
               <rect x="3" y="3" width="18" height="18" rx="2" />
               <circle cx="8.5" cy="8.5" r="1.5" />
               <path d="M21 15l-5-5L5 21" />

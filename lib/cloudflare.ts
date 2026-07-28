@@ -39,7 +39,7 @@ function getR2(): S3Client {
  */
 export async function getPhotoUploadUrl(
   key: string,
-  contentType: string
+  contentType: string,
 ): Promise<{ uploadUrl: string; publicUrl: string }> {
   const bucket = process.env.CLOUDFLARE_R2_BUCKET_NAME;
   if (!bucket) throw new Error("CLOUDFLARE_R2_BUCKET_NAME is not set");
@@ -80,11 +80,13 @@ export async function getStreamUploadUrl(maxDurationSeconds = 600): Promise<{
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ maxDurationSeconds }),
-    }
+    },
   );
 
   if (!res.ok) {
-    throw new Error(`Cloudflare Stream upload URL request failed: ${res.status}`);
+    throw new Error(
+      `Cloudflare Stream upload URL request failed: ${res.status}`,
+    );
   }
 
   const data = (await res.json()) as {
