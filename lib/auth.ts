@@ -2,6 +2,9 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { prisma } from "./prisma";
 import type { Role, User } from "@prisma/client";
+import { isAuthConfigured } from "./config";
+
+export { isAuthConfigured };
 
 /**
  * Authentication and backend authorization.
@@ -11,14 +14,6 @@ import type { Role, User } from "@prisma/client";
  * UI, so a seller cannot act on another seller's listing by calling the API
  * directly.
  */
-
-/** True when this deployment has Clerk credentials set. */
-export function isAuthConfigured(): boolean {
-  return Boolean(
-    process.env.CLERK_SECRET_KEY &&
-    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-  );
-}
 
 /**
  * The signed-in user's Clerk id, or null when nobody is signed in or Clerk

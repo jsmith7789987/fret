@@ -1,5 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { isAuthConfigured } from "@/lib/config";
 
 /**
  * Browsing is public. Section 3 of the brief requires an anonymous visitor to
@@ -20,9 +21,7 @@ const isProtectedRoute = createRouteMatcher([
 
 // Without Clerk credentials the middleware cannot verify anything. Pass through
 // so the public site still serves, and let the health check report the gap.
-const authConfigured = Boolean(
-  process.env.CLERK_SECRET_KEY && process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-);
+const authConfigured = isAuthConfigured();
 
 const withClerk = clerkMiddleware(async (auth, req) => {
   if (!isProtectedRoute(req)) return NextResponse.next();

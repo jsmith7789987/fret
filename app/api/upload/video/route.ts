@@ -1,19 +1,13 @@
 import { NextResponse } from "next/server";
 import { getStreamUploadUrl } from "@/lib/cloudflare";
+import { isStreamConfigured } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
-
-function streamConfigured(): boolean {
-  return Boolean(
-    process.env.CLOUDFLARE_ACCOUNT_ID &&
-    process.env.CLOUDFLARE_STREAM_API_TOKEN,
-  );
-}
 
 export async function POST() {
   // Distinguish "video hosting isn't set up on this deployment" from a genuine
   // upload failure. The seller flow uses this to stay walkable either way.
-  if (!streamConfigured()) {
+  if (!isStreamConfigured()) {
     return NextResponse.json(
       {
         configured: false,

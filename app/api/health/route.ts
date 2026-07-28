@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { configuredServices } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -22,26 +23,7 @@ export async function GET() {
     databaseError = err instanceof Error ? err.message : "unknown error";
   }
 
-  const configured = {
-    database: Boolean(process.env.DATABASE_URL),
-    clerk: Boolean(
-      process.env.CLERK_SECRET_KEY &&
-      process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-    ),
-    anthropic: Boolean(process.env.ANTHROPIC_API_KEY),
-    stripe: Boolean(process.env.STRIPE_SECRET_KEY),
-    cloudflareStream: Boolean(
-      process.env.CLOUDFLARE_ACCOUNT_ID &&
-      process.env.CLOUDFLARE_STREAM_API_TOKEN,
-    ),
-    cloudflareR2: Boolean(
-      process.env.CLOUDFLARE_R2_ACCESS_KEY_ID &&
-      process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY,
-    ),
-    twilio: Boolean(process.env.TWILIO_ACCOUNT_SID),
-    resend: Boolean(process.env.RESEND_API_KEY),
-    typesense: Boolean(process.env.TYPESENSE_HOST),
-  };
+  const configured = configuredServices();
 
   const body = {
     status: database === "ok" ? "ok" : "degraded",

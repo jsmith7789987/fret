@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "@/components/ui/ArrowRight";
 import type { Category } from "@/lib/categories";
 import { formatCount } from "@/lib/categories";
 
@@ -61,19 +62,7 @@ export function CategoryTile({
             aria-hidden
             className="mb-1 shrink-0 text-white transition-transform duration-300 group-hover:translate-x-1"
           >
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
+            <ArrowRight size={22} />
           </span>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "@/components/ui/ArrowRight";
 import { SiteHeader } from "@/components/nav/SiteHeader";
 import { SiteFooter } from "@/components/nav/SiteFooter";
 import { CategoryTile } from "@/components/home/CategoryTile";
@@ -67,20 +68,7 @@ export default function HomePage() {
             className="hidden shrink-0 items-center gap-2 text-[14px] text-action hover:text-action-hover sm:inline-flex"
           >
             See everything
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden
-            >
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
+            <ArrowRight size={16} />
           </Link>
         </div>
 
@@ -164,21 +152,9 @@ function ForkCard({
       </p>
       <span className="mt-6 inline-flex items-center gap-2 text-[14px] font-medium text-action">
         {primary ? "Build my profile" : "Browse guitars"}
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="transition-transform duration-300 group-hover:translate-x-1"
-          aria-hidden
-        >
-          <line x1="5" y1="12" x2="19" y2="12" />
-          <polyline points="12 5 19 12 12 19" />
-        </svg>
+        <span className="transition-transform duration-300 group-hover:translate-x-1">
+          <ArrowRight size={16} />
+        </span>
       </span>
     </Link>
   );

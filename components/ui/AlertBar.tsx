@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "@/components/ui/ArrowRight";
 
 export function AlertBar({
   count,
@@ -22,20 +23,7 @@ export function AlertBar({
         <span className="h-1.5 w-1.5 rounded-full bg-match" />
         {label}
       </span>
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden
-      >
-        <line x1="5" y1="12" x2="19" y2="12" />
-        <polyline points="12 5 19 12 12 19" />
-      </svg>
+      <ArrowRight size={16} />
     </Link>
   );
 }
