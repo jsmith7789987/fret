@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { guitarTitle } from "./format";
 
 let client: Resend | null = null;
 
@@ -24,9 +25,7 @@ export async function sendMatchEmail(
     id: string;
   },
 ) {
-  const guitarName = [listing.year, listing.brand, listing.model]
-    .filter(Boolean)
-    .join(" ");
+  const guitarName = guitarTitle(listing);
   const url = `${process.env.NEXT_PUBLIC_APP_URL}/listing/${listing.id}`;
 
   await getClient().emails.send({

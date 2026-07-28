@@ -9,6 +9,7 @@ import {
   BACK_SIDES_WOODS,
   modelsForBrand,
 } from "@/lib/guitars";
+import { guitarTitle } from "@/lib/format";
 
 export interface GuitarSpec {
   brand: string;
@@ -33,7 +34,10 @@ export const EMPTY_GUITAR: GuitarSpec = {
 };
 
 export function guitarLabel(g: GuitarSpec): string {
-  return [g.yearBuilt, g.brand, g.model].filter(Boolean).join(" ") || "Guitar";
+  return (
+    guitarTitle({ year: g.yearBuilt, brand: g.brand, model: g.model }) ||
+    "Guitar"
+  );
 }
 
 /**

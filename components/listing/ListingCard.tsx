@@ -1,7 +1,12 @@
 import Link from "next/link";
 import type { Condition } from "@prisma/client";
 import { MatchBadge } from "../ui/MatchBadge";
-import { formatPrice, formatCondition, formatLocation } from "@/lib/format";
+import {
+  formatPrice,
+  formatCondition,
+  formatLocation,
+  guitarTitle,
+} from "@/lib/format";
 
 export interface ListingCardData {
   id: string;
@@ -38,9 +43,7 @@ function VideoBadge() {
 
 export function ListingCard({ listing }: { listing: ListingCardData }) {
   const thumb = listing.videoThumb ?? listing.photos[0] ?? null;
-  const title = [listing.year, listing.brand, listing.model]
-    .filter(Boolean)
-    .join(" ");
+  const title = guitarTitle(listing);
   const sub = [
     listing.finish,
     formatCondition(listing.condition),

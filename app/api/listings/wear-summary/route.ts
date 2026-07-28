@@ -1,16 +1,8 @@
 import { NextResponse } from "next/server";
 import { summarizeWear } from "@/lib/anthropic";
+import { isCondition } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
-
-const CONDITIONS = [
-  "MINT",
-  "EXCELLENT",
-  "VERY_GOOD_PLUS",
-  "VERY_GOOD",
-  "GOOD",
-  "FAIR",
-];
 
 /**
  * Summarize a seller's free-text wear-and-tear description.
@@ -44,10 +36,9 @@ export async function POST(req: Request) {
     );
   }
 
-  const condition =
-    body.condition && CONDITIONS.includes(body.condition)
-      ? body.condition
-      : "UNSPECIFIED";
+  const condition = isCondition(body.condition)
+    ? body.condition
+    : "UNSPECIFIED";
 
   try {
     const summary = await summarizeWear({

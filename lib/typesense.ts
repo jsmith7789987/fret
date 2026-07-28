@@ -80,5 +80,3 @@ export async function indexListing(listing: Listing): Promise<void> {
     console.error("Typesense indexListing failed:", err);
   }
 }
-
-

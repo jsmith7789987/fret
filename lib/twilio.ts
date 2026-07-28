@@ -1,4 +1,5 @@
 import twilio from "twilio";
+import { guitarTitle } from "./format";
 
 let client: twilio.Twilio | null = null;
 
@@ -25,9 +26,7 @@ export async function sendMatchAlert(
     id: string;
   },
 ) {
-  const guitarName = [listing.year, listing.brand, listing.model]
-    .filter(Boolean)
-    .join(" ");
+  const guitarName = guitarTitle(listing);
   const url = `${process.env.NEXT_PUBLIC_APP_URL}/listing/${listing.id}`;
 
   await getClient().messages.create({

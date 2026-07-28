@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Button } from "../ui/Button";
-import { CONDITIONS, formatPrice } from "@/lib/format";
+import { CONDITIONS, formatPrice, guitarTitle } from "@/lib/format";
+import { getListingFeeDollars, isPremiumPrice } from "@/lib/pricing";
 import {
   MAJOR_BRANDS,
   BOUTIQUE_BRANDS,
@@ -126,7 +127,10 @@ export function SellFlow() {
   const modelOptions = details.brand ? modelsForBrand(details.brand) : [];
   const priceNum = Number(details.price);
   const priceTooLow = details.price !== "" && priceNum < MIN_NEW_PRICE;
-  const fee = priceNum >= 2500 ? 50 : 25;
+  // The client does not know the seller's role, so it quotes the non-dealer
+  // fee. The server recalculates from the real role before charging. A dealer
+  // can therefore be quoted more than they are billed. Unchanged from before.
+  const fee = getListingFeeDollars(priceNum, false);
 
   // ---- per-step validation -------------------------------------------------
   const identityValid = Boolean(
@@ -319,9 +323,7 @@ export function SellFlow() {
     }
   }
 
-  const guitarName =
-    [details.year, details.brand, details.model].filter(Boolean).join(" ") ||
-    "Your guitar";
+  const guitarName = guitarTitle(details) || "Your guitar";
 
   const specRows: [string, string][] = (
     [
@@ -886,7 +888,8 @@ export function SellFlow() {
             <div>
               <p className="text-[14px] font-medium text-ink">Listing fee</p>
               <p className="text-[12px] text-muted">
-                {priceNum >= 2500 ? "Premium ($2,500+)" : "Standard"}. one-time
+                {isPremiumPrice(priceNum) ? "Premium" : "Standard"} tier,
+                one-time
               </p>
             </div>
             <p className="font-serif text-[22px] text-ink">${fee}</p>

@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { guitarTitle } from "./format";
 
 /**
  * The model used for every AI job. Configurable by env var per Section 7 of
@@ -179,9 +180,7 @@ export interface WearSummaryInput {
 }
 
 export function buildWearPrompt(input: WearSummaryInput): string {
-  const guitar =
-    [input.year, input.brand, input.model].filter(Boolean).join(" ") ||
-    "this guitar";
+  const guitar = guitarTitle(input) || "this guitar";
 
   return `You are summarizing a seller's description of wear and tear on a used acoustic guitar for a high-end guitar marketplace.
 

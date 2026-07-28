@@ -17,6 +17,28 @@ export function formatCondition(condition: Condition): string {
   return CONDITION_LABELS[condition] ?? condition;
 }
 
+/** The condition enum values, for validating request bodies. */
+export const CONDITION_VALUES = Object.keys(CONDITION_LABELS) as Condition[];
+
+export function isCondition(value: unknown): value is Condition {
+  return (
+    typeof value === "string" && CONDITION_VALUES.includes(value as Condition)
+  );
+}
+
+/**
+ * How a guitar is named everywhere it appears: cards, listing pages, the
+ * seller dashboard, AI prompts, and SMS alerts. One definition so the name
+ * does not drift between surfaces.
+ */
+export function guitarTitle(guitar: {
+  year?: number | string | null;
+  brand?: string | null;
+  model?: string | null;
+}): string {
+  return [guitar.year, guitar.brand, guitar.model].filter(Boolean).join(" ");
+}
+
 export const CONDITIONS: { value: Condition; label: string }[] = (
   Object.keys(CONDITION_LABELS) as Condition[]
 ).map((value) => ({ value, label: CONDITION_LABELS[value] }));

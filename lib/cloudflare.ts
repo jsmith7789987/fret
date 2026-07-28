@@ -99,4 +99,3 @@ export async function getStreamUploadUrl(maxDurationSeconds = 600): Promise<{
 export function streamThumbnailUrl(videoId: string): string {
   return `https://customer-${process.env.CLOUDFLARE_ACCOUNT_ID}.cloudflarestream.com/${videoId}/thumbnails/thumbnail.jpg`;
 }
-

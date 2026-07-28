@@ -15,6 +15,7 @@ import {
   BACK_SIDES_WOODS,
   MIN_NEW_PRICE,
 } from "@/lib/guitars";
+import { guitarTitle } from "@/lib/format";
 
 const STEPS = [
   "brands",
@@ -108,7 +109,7 @@ export function ProfileForm() {
         .filter((g) => g.brand || g.model)
         .map((g) => {
           const parts = [
-            [g.yearBuilt, g.brand, g.model].filter(Boolean).join(" "),
+            guitarTitle({ year: g.yearBuilt, brand: g.brand, model: g.model }),
             g.bodyShape && `body: ${g.bodyShape}`,
             g.topWood && `top: ${g.topWood}`,
             g.backSidesWood && `back/sides: ${g.backSidesWood}`,

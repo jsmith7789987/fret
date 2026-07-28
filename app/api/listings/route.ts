@@ -1,19 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireApiUser } from "@/lib/auth";
-import { getStripe, getListingFee, getTier } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
+import { getListingFeeCents, getTier } from "@/lib/pricing";
 import { streamThumbnailUrl } from "@/lib/cloudflare";
 import { MIN_NEW_PRICE } from "@/lib/guitars";
-import type { Condition } from "@prisma/client";
-
-const CONDITIONS = [
-  "MINT",
-  "EXCELLENT",
-  "VERY_GOOD_PLUS",
-  "VERY_GOOD",
-  "GOOD",
-  "FAIR",
-];
+import { isCondition } from "@/lib/format";
 
 interface CreateBody {
   brand?: string;
@@ -61,7 +53,6 @@ export async function POST(req: Request) {
 
   const { brand, model, description } = body;
   const price = Number(body.price);
-  const condition = body.condition as Condition | undefined;
 
   if (!brand || !model || !description) {
     return NextResponse.json(
@@ -77,9 +68,10 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
-  if (!condition || !CONDITIONS.includes(condition)) {
+  if (!isCondition(body.condition)) {
     return NextResponse.json({ error: "Invalid condition" }, { status: 400 });
   }
+  const condition = body.condition;
   if (!Number.isFinite(price) || price <= 0) {
     return NextResponse.json({ error: "Invalid price" }, { status: 400 });
   }
@@ -135,7 +127,7 @@ export async function POST(req: Request) {
   });
 
   // Create the Stripe checkout session for the listing fee.
-  const fee = getListingFee(price, isDealer);
+  const feeInCents = getListingFeeCents(price, isDealer);
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
   try {
@@ -145,7 +137,7 @@ export async function POST(req: Request) {
         {
           price_data: {
             currency: "usd",
-            unit_amount: fee,
+            unit_amount: feeInCents,
             product_data: {
               name: `fret. listing fee. ${tier.toLowerCase()}`,
               description: `${brand} ${model}`,

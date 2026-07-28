@@ -10,6 +10,7 @@ import {
   formatCondition,
   formatLocation,
   memberSince,
+  guitarTitle,
 } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -37,9 +38,7 @@ export default async function ListingDetailPage({
       })
     : null;
 
-  const title = [listing.year, listing.brand, listing.model]
-    .filter(Boolean)
-    .join(" ");
+  const title = guitarTitle(listing);
   const location = formatLocation(listing.city, listing.state);
   const galleryPhotos = listing.videoId
     ? listing.photos

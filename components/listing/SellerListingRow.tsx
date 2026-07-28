@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Condition, ListingStatus } from "@prisma/client";
 import { StatusBadge } from "./StatusBadge";
-import { formatPrice, formatCondition } from "@/lib/format";
+import { formatPrice, formatCondition, guitarTitle } from "@/lib/format";
 
 export interface SellerRowData {
   id: string;
@@ -19,9 +19,7 @@ export interface SellerRowData {
 
 export function SellerListingRow({ listing }: { listing: SellerRowData }) {
   const thumb = listing.videoThumb ?? listing.photos[0] ?? null;
-  const title = [listing.year, listing.brand, listing.model]
-    .filter(Boolean)
-    .join(" ");
+  const title = guitarTitle(listing);
 
   const body = (
     <div className="flex items-center gap-4 rounded-card border-[0.5px] border-hairline bg-white p-3 transition-colors hover:border-ink">
