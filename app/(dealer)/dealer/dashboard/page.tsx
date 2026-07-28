@@ -22,7 +22,7 @@ export default async function DealerDashboardPage() {
       include: { matchScores: true },
     })
     .catch((err) => {
-      console.error("Dashboard data unavailable:", err);
+      console.error("[dealer/dashboard] Data unavailable:", err);
       return [];
     });
 

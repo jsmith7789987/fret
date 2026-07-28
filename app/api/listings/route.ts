@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { authFailure, badRequest, ok } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 import { requireApiUser } from "@/lib/auth";
 import { getStripe } from "@/lib/stripe";
@@ -39,51 +40,38 @@ interface CreateBody {
 
 export async function POST(req: Request) {
   const auth = await requireApiUser();
-  if (!auth.ok) {
-    return NextResponse.json({ error: auth.error }, { status: auth.status });
-  }
+  if (!auth.ok) return authFailure(auth);
   const user = auth.user;
 
   let body: CreateBody;
   try {
     body = (await req.json()) as CreateBody;
   } catch {
-    return NextResponse.json({ error: "Invalid body" }, { status: 400 });
+    return badRequest("Invalid body");
   }
 
   const { brand, model, description } = body;
   const price = Number(body.price);
 
   if (!brand || !model || !description) {
-    return NextResponse.json(
-      { error: "brand, model and description are required" },
-      { status: 400 },
-    );
+    return badRequest("brand, model and description are required");
   }
   // Serial number is mandatory for every listing on fret.
   const serialNumber = (body.serialNumber ?? "").trim();
   if (!serialNumber) {
-    return NextResponse.json(
-      { error: "A serial number is required for every listing." },
-      { status: 400 },
-    );
+    return badRequest("A serial number is required for every listing.");
   }
   if (!isCondition(body.condition)) {
-    return NextResponse.json({ error: "Invalid condition" }, { status: 400 });
+    return badRequest("Invalid condition");
   }
   const condition = body.condition;
   if (!Number.isFinite(price) || price <= 0) {
-    return NextResponse.json({ error: "Invalid price" }, { status: 400 });
+    return badRequest("Invalid price");
   }
   // fret. is luxury-only: nothing on the site sold under $3,000 new.
   if (price < MIN_NEW_PRICE) {
-    return NextResponse.json(
-      {
-        error: `fret. only lists guitars from $${MIN_NEW_PRICE.toLocaleString(
-          "en-US",
-        )} up.`,
-      },
-      { status: 400 },
+    return badRequest(
+      `fret. only lists guitars from $${MIN_NEW_PRICE.toLocaleString("en-US")} up.`,
     );
   }
 
@@ -151,9 +139,9 @@ export async function POST(req: Request) {
       cancel_url: `${appUrl}/sell?canceled=${listing.id}`,
     });
 
-    return NextResponse.json({ listingId: listing.id, url: session.url });
+    return ok({ listingId: listing.id, url: session.url });
   } catch (err) {
-    console.error("Stripe checkout failed:", err);
+    console.error("[listings] Stripe checkout failed:", err);
     return NextResponse.json(
       { error: "Could not start checkout", listingId: listing.id },
       { status: 502 },

@@ -199,7 +199,7 @@ export function SellFlow() {
       setVideoId(id);
       setVideoProgress(100);
     } catch (err) {
-      console.error(err);
+      console.error("[sell] Video upload failed:", err);
       setError("Video upload failed. Please try again.");
     } finally {
       setVideoUploading(false);
@@ -233,7 +233,7 @@ export function SellFlow() {
         setPhotos((prev) => [...prev, publicUrl]);
       }
     } catch (err) {
-      console.error(err);
+      console.error("[sell] Photo upload failed:", err);
       setError("One or more photos failed to upload.");
     } finally {
       setPhotoUploading(false);
@@ -313,7 +313,7 @@ export function SellFlow() {
         throw new Error(data.error ?? "Checkout failed");
       window.location.href = data.url;
     } catch (err) {
-      console.error(err);
+      console.error("[sell] Checkout failed:", err);
       setError(
         err instanceof Error
           ? err.message

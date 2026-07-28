@@ -1,13 +1,17 @@
-import { NextResponse } from "next/server";
+import {
+  authFailure,
+  badRequest,
+  notFound,
+  ok,
+  upstreamFailure,
+} from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 import { requireApiUser } from "@/lib/auth";
 import { sendContactEmail } from "@/lib/resend";
 
 export async function POST(req: Request) {
   const auth = await requireApiUser();
-  if (!auth.ok) {
-    return NextResponse.json({ error: auth.error }, { status: auth.status });
-  }
+  if (!auth.ok) return authFailure(auth);
   const user = auth.user;
 
   let listingId = "";
@@ -20,14 +24,11 @@ export async function POST(req: Request) {
     listingId = body.listingId ?? "";
     message = (body.message ?? "").trim();
   } catch {
-    return NextResponse.json({ error: "Invalid body" }, { status: 400 });
+    return badRequest("Invalid body");
   }
 
   if (!listingId || !message) {
-    return NextResponse.json(
-      { error: "listingId and message are required" },
-      { status: 400 },
-    );
+    return badRequest("listingId and message are required");
   }
 
   const listing = await prisma.listing.findUnique({
@@ -36,7 +37,7 @@ export async function POST(req: Request) {
   });
 
   if (!listing) {
-    return NextResponse.json({ error: "Listing not found" }, { status: 404 });
+    return notFound("Listing not found");
   }
 
   try {
@@ -46,12 +47,8 @@ export async function POST(req: Request) {
       id: listing.id,
     });
   } catch (err) {
-    console.error("Contact email failed:", err);
-    return NextResponse.json(
-      { error: "Could not send message" },
-      { status: 502 },
-    );
+    return upstreamFailure("contact", err, "Could not send message");
   }
 
-  return NextResponse.json({ ok: true });
+  return ok({ ok: true });
 }

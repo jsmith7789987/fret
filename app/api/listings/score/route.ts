@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { ok, unauthorized } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 import { scoreMatch } from "@/lib/anthropic";
 import { sendMatchAlert } from "@/lib/twilio";
@@ -77,7 +77,7 @@ async function scorePair(
         },
       });
     } catch (err) {
-      console.error("Failed to send match alert:", err);
+      console.error("[score] Failed to send match alert:", err);
     }
   }
 }
@@ -91,7 +91,7 @@ async function runBatches<T>(items: T[], fn: (item: T) => Promise<void>) {
 
 export async function POST(req: Request) {
   if (!authorized(req)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return unauthorized("Invalid or missing cron secret.");
   }
 
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
@@ -121,13 +121,13 @@ export async function POST(req: Request) {
       scored += 1;
     } catch (err) {
       console.error(
-        `Scoring failed for listing ${listing.id} / buyer ${buyer.userId}:`,
+        `[score] Scoring failed for listing ${listing.id}, buyer ${buyer.userId}:`,
         err,
       );
     }
   });
 
-  return NextResponse.json({
+  return ok({
     listings: listings.length,
     buyers: buyers.length,
     pairsScored: scored,

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { authFailure, badRequest, ok } from "@/lib/api";
 import { extractProfile, type ExtractedProfile } from "@/lib/anthropic";
 import { prisma } from "@/lib/prisma";
 import { requireApiUser } from "@/lib/auth";
@@ -55,9 +55,7 @@ function strings(list: unknown, limit = 60): string[] {
 
 export async function POST(req: Request) {
   const auth = await requireApiUser();
-  if (!auth.ok) {
-    return NextResponse.json({ error: auth.error }, { status: auth.status });
-  }
+  if (!auth.ok) return authFailure(auth);
   const user = auth.user;
 
   let onboardingText = "";
@@ -70,14 +68,11 @@ export async function POST(req: Request) {
     onboardingText = (body.onboardingText ?? "").trim();
     structured = body.structured ?? {};
   } catch {
-    return NextResponse.json({ error: "Invalid body" }, { status: 400 });
+    return badRequest("Invalid body");
   }
 
   if (!onboardingText) {
-    return NextResponse.json(
-      { error: "onboardingText is required" },
-      { status: 400 },
-    );
+    return badRequest("onboardingText is required");
   }
 
   // AI extraction is best-effort. the structured picks are the source of
@@ -87,7 +82,7 @@ export async function POST(req: Request) {
     extracted = await extractProfile(onboardingText);
   } catch (err) {
     console.error(
-      "Profile extraction failed, saving structured data only:",
+      "[profile/extract] AI extraction failed, saving structured picks only:",
       err,
     );
   }
@@ -139,7 +134,7 @@ export async function POST(req: Request) {
     });
   }
 
-  return NextResponse.json({
+  return ok({
     profile,
     guitars: { owned: owned.length, chasing: chasing.length },
     aiExtracted: extracted !== null,

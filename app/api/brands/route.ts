@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { ok } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 import { MAJOR_BRANDS, BOUTIQUE_BRANDS } from "@/lib/guitars";
 
@@ -16,10 +16,10 @@ export async function GET() {
     promoted = rows.map((r) => r.displayName);
   } catch (err) {
     // DB unavailable. still serve the static catalog.
-    console.error("Could not load promoted brands:", err);
+    console.error("[brands] Could not load promoted brands:", err);
   }
 
-  return NextResponse.json({
+  return ok({
     major: MAJOR_BRANDS,
     boutique: BOUTIQUE_BRANDS,
     promoted,

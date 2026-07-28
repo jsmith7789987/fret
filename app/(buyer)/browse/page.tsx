@@ -38,7 +38,7 @@ export default async function BrowsePage() {
       }),
     ]);
   } catch (err) {
-    console.error("Browse data unavailable:", err);
+    console.error("[browse] Data unavailable:", err);
   }
 
   const scoreByListing = new Map(scores.map((s) => [s.listingId, s.score]));

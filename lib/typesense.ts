@@ -77,6 +77,6 @@ export async function indexListing(listing: Listing): Promise<void> {
       .upsert(toDocument(listing));
   } catch (err) {
     // Search indexing is non-critical. never block the write path.
-    console.error("Typesense indexListing failed:", err);
+    console.error("[typesense] indexListing failed:", err);
   }
 }

@@ -63,7 +63,7 @@ export async function getCurrentUser(): Promise<User | null> {
       },
     });
   } catch (err) {
-    console.error("Could not resolve current user:", err);
+    console.error("[auth] Could not resolve current user:", err);
     return null;
   }
 }

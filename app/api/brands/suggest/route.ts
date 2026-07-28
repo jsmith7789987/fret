@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { authFailure, badRequest, ok } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 import { requireApiUser } from "@/lib/auth";
 import {
@@ -15,9 +15,7 @@ import {
  */
 export async function POST(req: Request) {
   const auth = await requireApiUser();
-  if (!auth.ok) {
-    return NextResponse.json({ error: auth.error }, { status: auth.status });
-  }
+  if (!auth.ok) return authFailure(auth);
   const user = auth.user;
 
   let name = "";
@@ -25,21 +23,21 @@ export async function POST(req: Request) {
     const body = (await req.json()) as { name?: string };
     name = (body.name ?? "").trim();
   } catch {
-    return NextResponse.json({ error: "Invalid body" }, { status: 400 });
+    return badRequest("Invalid body");
   }
 
   if (!name || name.length > 60) {
-    return NextResponse.json({ error: "Invalid brand name" }, { status: 400 });
+    return badRequest("Invalid brand name");
   }
 
   // Already a catalog brand. nothing to track.
   if (findBrand(name)) {
-    return NextResponse.json({ promoted: true, count: null, known: true });
+    return ok({ promoted: true, count: null, known: true });
   }
 
   const slug = normalizeBrandName(name);
   if (!slug) {
-    return NextResponse.json({ error: "Invalid brand name" }, { status: 400 });
+    return badRequest("Invalid brand name");
   }
 
   const suggestion = await prisma.brandSuggestion.upsert({
@@ -54,14 +52,14 @@ export async function POST(req: Request) {
       where: { id: suggestion.id },
       data: { promoted: true },
     });
-    return NextResponse.json({
+    return ok({
       promoted: true,
       count: promotedRecord.count,
       threshold: BRAND_PROMOTION_THRESHOLD,
     });
   }
 
-  return NextResponse.json({
+  return ok({
     promoted: suggestion.promoted,
     count: suggestion.count,
     threshold: BRAND_PROMOTION_THRESHOLD,

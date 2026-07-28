@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { badRequest, ok, upstreamFailure } from "@/lib/api";
 import { summarizeWear } from "@/lib/anthropic";
 import { isCondition } from "@/lib/format";
 
@@ -19,21 +19,15 @@ export async function POST(req: Request) {
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: "Invalid body" }, { status: 400 });
+    return badRequest("Invalid body");
   }
 
   const wearAndTear = (body.wearAndTear ?? "").trim();
   if (wearAndTear.length < 20) {
-    return NextResponse.json(
-      { error: "Describe the wear in a bit more detail first." },
-      { status: 400 },
-    );
+    return badRequest("Describe the wear in a bit more detail first.");
   }
   if (wearAndTear.length > 5000) {
-    return NextResponse.json(
-      { error: "That description is too long to summarize." },
-      { status: 400 },
-    );
+    return badRequest("That description is too long to summarize.");
   }
 
   const condition = isCondition(body.condition)
@@ -50,18 +44,19 @@ export async function POST(req: Request) {
     });
 
     if (!summary) {
-      return NextResponse.json(
-        { error: "Could not summarize that. You can write your own." },
-        { status: 502 },
+      return upstreamFailure(
+        "wear-summary",
+        new Error("Model returned an empty summary"),
+        "Could not summarize that. You can write your own.",
       );
     }
 
-    return NextResponse.json({ summary });
+    return ok({ summary });
   } catch (err) {
-    console.error("Wear summary failed:", err);
-    return NextResponse.json(
-      { error: "Summary service unavailable. You can write your own." },
-      { status: 502 },
+    return upstreamFailure(
+      "wear-summary",
+      err,
+      "Summary service unavailable. You can write your own.",
     );
   }
 }

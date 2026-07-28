@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { notConfigured, ok, upstreamFailure } from "@/lib/api";
 import { getStreamUploadUrl } from "@/lib/cloudflare";
 import { isStreamConfigured } from "@/lib/config";
 
@@ -8,23 +8,13 @@ export async function POST() {
   // Distinguish "video hosting isn't set up on this deployment" from a genuine
   // upload failure. The seller flow uses this to stay walkable either way.
   if (!isStreamConfigured()) {
-    return NextResponse.json(
-      {
-        configured: false,
-        error: "Video hosting is not configured on this deployment.",
-      },
-      { status: 503 },
-    );
+    return notConfigured("Video hosting is not configured on this deployment.");
   }
 
   try {
     const { uploadURL, videoId } = await getStreamUploadUrl();
-    return NextResponse.json({ configured: true, uploadURL, videoId });
+    return ok({ configured: true, uploadURL, videoId });
   } catch (err) {
-    console.error("Video upload URL failed:", err);
-    return NextResponse.json(
-      { configured: true, error: "Could not create upload URL" },
-      { status: 502 },
-    );
+    return upstreamFailure("upload/video", err, "Could not create upload URL");
   }
 }

@@ -21,7 +21,7 @@ export default async function SellerDashboardPage() {
       include: { matchScores: true },
     })
     .catch((err) => {
-      console.error("Dashboard data unavailable:", err);
+      console.error("[dashboard] Data unavailable:", err);
       return [];
     });
 
