@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Nav } from "@/components/Nav";
+import { SiteHeader } from "@/components/nav/SiteHeader";
 import { ButtonLink } from "@/components/ui/Button";
 import {
   SellerListingRow,
@@ -50,8 +50,8 @@ export default async function DealerDashboardPage() {
   const isDealer = user.role === "DEALER";
 
   return (
-    <div className="min-h-screen bg-canvas">
-      <Nav />
+    <div className="min-h-screen bg-white">
+      <SiteHeader showCategories={false} />
       <main className="mx-auto max-w-4xl px-5 py-10">
         <div className="mb-8 flex items-center justify-between">
           <div>
@@ -66,7 +66,7 @@ export default async function DealerDashboardPage() {
         </div>
 
         {!isDealer && (
-          <div className="mb-6 rounded-card border border-amber-border bg-amber-bg px-4 py-3 text-[13px] text-amber-text">
+          <div className="mb-6 rounded-card border border-match-border bg-match-bg px-4 py-3 text-[13px] text-match-text">
             This is the dealer view. Your account isn&apos;t flagged as a dealer
             yet. contact us to enable flat $25 listing pricing across your
             inventory.

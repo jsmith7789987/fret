@@ -16,10 +16,10 @@ export function AlertBar({
   return (
     <Link
       href={href}
-      className="flex items-center justify-between rounded-card border border-amber-border bg-amber-bg px-4 py-3 text-amber-text transition-colors hover:border-amber"
+      className="flex items-center justify-between rounded-card border border-match-border bg-match-bg px-4 py-3 text-match-text transition-colors hover:border-match"
     >
       <span className="flex items-center gap-2 text-[13px] font-medium">
-        <span className="h-1.5 w-1.5 rounded-full bg-amber" />
+        <span className="h-1.5 w-1.5 rounded-full bg-match" />
         {label}
       </span>
       <svg

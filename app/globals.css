@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --canvas: #f8f7f5;
+  --canvas: #ffffff;
   --ink: #111110;
+  --action: #224ff1;
 }
 
 html,
@@ -21,14 +22,16 @@ body {
 
 @layer components {
   .fret-input {
-    @apply w-full rounded-card border-[0.5px] border-hairline bg-white px-3 py-2 text-[14px] text-ink placeholder:text-muted/60 focus:border-ink;
+    @apply w-full rounded-card border-[0.5px] border-hairline bg-white px-3 py-2 text-[14px] text-ink placeholder:text-muted/60 focus:border-action;
   }
 }
 
 /* No shadows anywhere except focus rings */
 :focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px #f8f7f5, 0 0 0 4px #c17a2a;
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 4px var(--action);
   border-radius: 6px;
 }
 

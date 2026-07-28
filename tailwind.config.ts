@@ -1,5 +1,12 @@
 import type { Config } from "tailwindcss";
 
+/**
+ * fret. design tokens.
+ *
+ * Two accents, kept strictly apart:
+ *   action  blue, everything a person can click or submit
+ *   match   amber, the match badge and the alert bar only, never a control
+ */
 const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -8,16 +15,29 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        canvas: "#F8F7F5",
+        // Ground
+        canvas: "#FFFFFF",
+        // Quiet band used to separate full width sections on a white page
+        sand: "#F8F7F5",
         ink: "#111110",
         muted: "#6B6860",
-        amber: {
+        hairline: "#E5E4E0",
+
+        // Action. Primary buttons, links, focus rings, active states
+        action: {
+          DEFAULT: "#224FF1",
+          hover: "#1B3FC4",
+          soft: "#EEF2FE",
+          border: "#C3D0FB",
+        },
+
+        // Match signal only. Never used for a control
+        match: {
           DEFAULT: "#C17A2A",
           bg: "#FEF6EC",
           border: "#F0C88A",
           text: "#7A4F10",
         },
-        hairline: "#e5e4e0",
       },
       fontFamily: {
         serif: ["var(--font-dm-serif)", "Georgia", "serif"],
@@ -25,6 +45,10 @@ const config: Config = {
       },
       borderRadius: {
         card: "10px",
+        tile: "4px",
+      },
+      maxWidth: {
+        shell: "1680px",
       },
       keyframes: {
         pulseDot: {

@@ -41,7 +41,7 @@ export default function RootLayout({
   return (
     <ClerkProvider publishableKey={publishableKey}>
       <html lang="en" className={`${dmSerif.variable} ${inter.variable}`}>
-        <body className="min-h-screen bg-canvas font-sans text-ink antialiased">
+        <body className="min-h-screen bg-white font-sans text-ink antialiased">
           {children}
         </body>
       </html>

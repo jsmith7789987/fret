@@ -29,7 +29,7 @@ export function ContactSeller({ listingId }: { listingId: string }) {
 
   if (status === "sent") {
     return (
-      <div className="rounded-card border border-amber-border bg-amber-bg px-4 py-3 text-[13px] text-amber-text">
+      <div className="rounded-card border border-match-border bg-match-bg px-4 py-3 text-[13px] text-match-text">
         Message sent. The seller will reply to your email.
       </div>
     );
@@ -53,7 +53,7 @@ export function ContactSeller({ listingId }: { listingId: string }) {
         className="w-full resize-none rounded-card border-[0.5px] border-hairline bg-white px-4 py-3 text-[14px] text-ink placeholder:text-muted/60 focus:border-ink"
       />
       {status === "error" && (
-        <p className="text-[12px] text-amber-text">
+        <p className="text-[12px] text-match-text">
           Could not send. Please try again.
         </p>
       )}

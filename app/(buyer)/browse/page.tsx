@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Nav } from "@/components/Nav";
+import { SiteHeader } from "@/components/nav/SiteHeader";
 import { AlertBar } from "@/components/ui/AlertBar";
 import { BrowseGrid } from "@/components/listing/BrowseGrid";
 import type { ListingCardData } from "@/components/listing/ListingCard";
@@ -77,8 +77,8 @@ export default async function BrowsePage() {
     profile?.brands[0] ?? profile?.genres[0] ?? "Build your profile";
 
   return (
-    <div className="min-h-screen bg-canvas">
-      <Nav />
+    <div className="min-h-screen bg-white">
+      <SiteHeader />
 
       <main className="mx-auto max-w-6xl px-5 py-8">
         {/* Hero */}
@@ -99,7 +99,7 @@ export default async function BrowsePage() {
             href="/onboarding"
             className="flex items-center gap-2 rounded-[20px] border-[0.5px] border-hairline bg-white px-3 py-1.5 text-[12px] text-ink hover:border-ink"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-amber" />
+            <span className="h-1.5 w-1.5 rounded-full bg-action" />
             <span className="font-medium">{topPref}</span>
             {profile?.maxSpend ? (
               <span className="text-muted">

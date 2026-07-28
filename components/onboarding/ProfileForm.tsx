@@ -297,7 +297,7 @@ export function ProfileForm() {
               />
             </div>
             {maxSpend !== "" && Number(maxSpend) < MIN_NEW_PRICE && (
-              <p className="mt-3 rounded-card border border-amber-border bg-amber-bg px-4 py-2 text-[12px] text-amber-text">
+              <p className="mt-3 rounded-card border border-match-border bg-match-bg px-4 py-2 text-[12px] text-match-text">
                 Heads up. fret. inventory starts around $
                 {MIN_NEW_PRICE.toLocaleString("en-US")}. We&apos;ll still show
                 you what we can.
@@ -307,7 +307,7 @@ export function ProfileForm() {
         )}
       </div>
 
-      {error && <p className="mt-4 text-[13px] text-amber-text">{error}</p>}
+      {error && <p className="mt-4 text-[13px] text-match-text">{error}</p>}
 
       <div className="mt-8 flex items-center justify-between">
         <button

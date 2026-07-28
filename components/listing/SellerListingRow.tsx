@@ -25,7 +25,7 @@ export function SellerListingRow({ listing }: { listing: SellerRowData }) {
 
   const body = (
     <div className="flex items-center gap-4 rounded-card border-[0.5px] border-hairline bg-white p-3 transition-colors hover:border-ink">
-      <div className="h-16 w-20 shrink-0 overflow-hidden rounded-md bg-canvas">
+      <div className="h-16 w-20 shrink-0 overflow-hidden rounded-md bg-white">
         {thumb ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={thumb} alt={title} className="h-full w-full object-cover" />

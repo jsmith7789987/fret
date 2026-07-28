@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Nav } from "@/components/Nav";
+import { SiteHeader } from "@/components/nav/SiteHeader";
 import { ButtonLink } from "@/components/ui/Button";
 import {
   SellerListingRow,
@@ -45,8 +45,8 @@ export default async function SellerDashboardPage() {
   const active = rows.filter((r) => r.status === "ACTIVE").length;
 
   return (
-    <div className="min-h-screen bg-canvas">
-      <Nav />
+    <div className="min-h-screen bg-white">
+      <SiteHeader showCategories={false} />
       <main className="mx-auto max-w-3xl px-5 py-10">
         <div className="mb-8 flex items-center justify-between">
           <div>

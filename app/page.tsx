@@ -1,96 +1,185 @@
 import Link from "next/link";
-import { ButtonLink } from "@/components/ui/Button";
-import { Logo } from "@/components/ui/Logo";
+import { SiteHeader } from "@/components/nav/SiteHeader";
+import { SiteFooter } from "@/components/nav/SiteFooter";
+import { CategoryTile } from "@/components/home/CategoryTile";
+import { FEATURED_CATEGORIES } from "@/lib/categories";
 
+export const dynamic = "force-dynamic";
+
+/**
+ * The front door.
+ *
+ * Section 3 of the brief requires a fork with two paths and nothing else
+ * competing for attention, so the fork owns the hero and sits above the fold
+ * on its own. Featured categories come after it, for the person who scrolls
+ * rather than choosing.
+ */
 export default function HomePage() {
+  // Per category counts arrive with Milestone 6 search. Until then a tile
+  // shows no number rather than a made up one.
+
   return (
-    <div className="min-h-screen bg-canvas">
-      {/* Nav */}
-      <header className="h-[52px] border-b-[0.5px] border-hairline bg-white">
-        <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-5">
-          <Logo href="/" />
-          <nav className="flex items-center gap-5 text-[13px] text-muted">
-            <Link href="/browse" className="hover:text-ink">
-              Browse
-            </Link>
-            <Link href="/sell" className="hover:text-ink">
-              Sell a guitar
-            </Link>
-            <Link href="/dealer/dashboard" className="hover:text-ink">
-              Dealers
-            </Link>
-            <ButtonLink href="/onboarding" variant="primary">
-              Build my profile
-            </ButtonLink>
-          </nav>
-        </div>
-      </header>
+    <div className="min-h-screen bg-white">
+      <SiteHeader />
 
-      {/* Hero */}
-      <section className="mx-auto max-w-3xl px-5 pb-16 pt-24 text-center">
-        <p className="mb-4 inline-flex items-center gap-2 rounded-[20px] border border-amber-border bg-amber-bg px-3 py-1 text-[12px] font-medium text-amber-text">
-          <span className="h-1.5 w-1.5 rounded-full bg-amber" />
-          Curated. Video-first. Matched to you.
-        </p>
-        <h1 className="font-serif text-5xl leading-[1.05] tracking-tight text-ink sm:text-6xl">
-          The guitar marketplace
-          <br />
-          that actually knows you.
-        </h1>
-        <p className="mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-muted">
-          fret. is an acoustic-only marketplace for serious instruments, with
-          AI-powered matching. Tell us how you play and what you&apos;re
-          chasing. we surface the guitars worth your attention, and text you the
-          moment the right one lists.
-        </p>
-        <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-          <ButtonLink
-            href="/onboarding"
-            variant="primary"
-            className="px-5 py-2.5"
-          >
-            Build my profile
-          </ButtonLink>
-          <ButtonLink
-            href="/browse"
-            variant="secondary"
-            className="px-5 py-2.5"
-          >
-            Browse inventory
-          </ButtonLink>
-          <ButtonLink href="/sell" variant="secondary" className="px-5 py-2.5">
-            Sell a guitar
-          </ButtonLink>
-        </div>
-      </section>
-
-      {/* Value props */}
-      <section className="mx-auto grid max-w-5xl gap-4 px-5 pb-24 sm:grid-cols-3">
-        {[
-          {
-            title: "Matched, not searched",
-            body: "Every listing is scored against your profile. Your browse page is ranked for you, not alphabetized.",
-          },
-          {
-            title: "Every guitar on video",
-            body: "Sellers are required to upload a walkthrough video, a serial number, and a full account of the wear.",
-          },
-          {
-            title: "Alerts that matter",
-            body: "When a guitar lists above your match threshold, you get a text. before anyone else scrolls past it.",
-          },
-        ].map((card) => (
-          <div
-            key={card.title}
-            className="rounded-card border-[0.5px] border-hairline bg-white p-6"
-          >
-            <h3 className="font-serif text-[18px] text-ink">{card.title}</h3>
-            <p className="mt-2 text-[13px] leading-relaxed text-muted">
-              {card.body}
+      {/* The fork */}
+      <section className="border-b-[0.5px] border-hairline bg-sand">
+        <div className="mx-auto max-w-shell px-5 py-20 lg:px-8 lg:py-28">
+          <div className="mx-auto max-w-3xl text-center">
+            <h1 className="font-serif text-[44px] leading-[1.06] tracking-tight text-ink sm:text-[60px]">
+              Boutique guitars,
+              <br />
+              priced to sell.
+            </h1>
+            <p className="mx-auto mt-6 max-w-xl text-[16px] leading-relaxed text-muted">
+              A curated marketplace for high end, vintage, and small shop
+              instruments. Every listing carries a video and a fair market price
+              check.
             </p>
           </div>
-        ))}
+
+          <div className="mx-auto mt-12 grid max-w-3xl gap-4 sm:grid-cols-2">
+            <ForkCard
+              href="/onboarding"
+              eyebrow="Recommended"
+              title="Tell us about yourself"
+              body="Six questions about what you play and what you are chasing. We rank every guitar for you and text you when the right one lists."
+              primary
+            />
+            <ForkCard
+              href="/browse"
+              eyebrow="No account needed"
+              title="Just start searching"
+              body="Go straight to everything for sale. You can build your profile later, any time."
+            />
+          </div>
+        </div>
       </section>
+
+      {/* Featured categories */}
+      <section className="mx-auto max-w-shell px-5 py-16 lg:px-8 lg:py-20">
+        <div className="mb-8 flex items-end justify-between gap-6">
+          <h2 className="font-serif text-[34px] leading-tight tracking-tight text-ink sm:text-[40px]">
+            Featured categories
+          </h2>
+          <Link
+            href="/browse"
+            className="hidden shrink-0 items-center gap-2 text-[14px] text-action hover:text-action-hover sm:inline-flex"
+          >
+            See everything
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {FEATURED_CATEGORIES.map((category) => (
+            <CategoryTile key={category.slug} category={category} />
+          ))}
+        </div>
+      </section>
+
+      {/* What makes this different */}
+      <section className="border-t-[0.5px] border-hairline bg-sand">
+        <div className="mx-auto max-w-shell px-5 py-16 lg:px-8 lg:py-20">
+          <div className="grid gap-10 sm:grid-cols-3">
+            {[
+              {
+                title: "Matched, not searched",
+                body: "Every listing is scored against your profile. Your browse page is ranked for you, not sorted alphabetically.",
+              },
+              {
+                title: "Priced to sell",
+                body: "Every asking price is checked against a fair market range. Sellers who want a fair price belong here. Wishful pricing does not.",
+              },
+              {
+                title: "Every guitar on video",
+                body: "A walkthrough video is required to list, along with the serial number and a full account of the wear.",
+              },
+            ].map((item) => (
+              <div key={item.title}>
+                <h3 className="font-serif text-[22px] leading-tight text-ink">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-[14px] leading-relaxed text-muted">
+                  {item.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <SiteFooter />
     </div>
+  );
+}
+
+function ForkCard({
+  href,
+  eyebrow,
+  title,
+  body,
+  primary = false,
+}: {
+  href: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+  primary?: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className={`group flex flex-col rounded-card border bg-white p-7 transition-colors ${
+        primary
+          ? "border-action hover:bg-action-soft"
+          : "border-hairline hover:border-action"
+      }`}
+    >
+      <span
+        className={`text-[11px] uppercase tracking-[0.12em] ${
+          primary ? "text-action" : "text-muted"
+        }`}
+      >
+        {eyebrow}
+      </span>
+      <h2 className="mt-3 font-serif text-[26px] leading-tight text-ink">
+        {title}
+      </h2>
+      <p className="mt-3 flex-1 text-[14px] leading-relaxed text-muted">
+        {body}
+      </p>
+      <span className="mt-6 inline-flex items-center gap-2 text-[14px] font-medium text-action">
+        {primary ? "Build my profile" : "Browse guitars"}
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="transition-transform duration-300 group-hover:translate-x-1"
+          aria-hidden
+        >
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+      </span>
+    </Link>
   );
 }

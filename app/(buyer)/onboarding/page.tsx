@@ -8,7 +8,7 @@ export default async function OnboardingPage() {
   await requireUser("/onboarding");
 
   return (
-    <div className="min-h-screen bg-canvas">
+    <div className="min-h-screen bg-white">
       <header className="h-[52px] border-b-[0.5px] border-hairline bg-white">
         <div className="mx-auto flex h-full max-w-6xl items-center px-5">
           <Logo href="/browse" />

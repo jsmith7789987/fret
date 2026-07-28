@@ -13,7 +13,7 @@ export function AuthShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-8 bg-canvas px-5">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-8 bg-white px-5">
       <Logo href="/" />
 
       {configured ? (
@@ -29,14 +29,14 @@ export function AuthShell({
           </p>
           <Link
             href="/browse"
-            className="mt-4 inline-flex items-center rounded-md bg-ink px-4 py-2 text-[13px] font-medium text-white hover:bg-amber"
+            className="mt-4 inline-flex items-center rounded-md bg-action px-4 py-2 text-[13px] font-medium text-white hover:bg-action-hover"
           >
             Browse guitars
           </Link>
         </div>
       )}
 
-      <Link href="/browse" className="text-[13px] text-muted hover:text-ink">
+      <Link href="/browse" className="text-[13px] text-muted hover:text-action">
         Keep looking without an account
       </Link>
     </div>

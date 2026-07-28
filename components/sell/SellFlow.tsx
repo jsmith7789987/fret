@@ -368,7 +368,7 @@ export function SellFlow() {
       </div>
 
       {error && (
-        <p className="mb-4 rounded-card border border-amber-border bg-amber-bg px-4 py-2 text-[13px] text-amber-text">
+        <p className="mb-4 rounded-card border border-match-border bg-match-bg px-4 py-2 text-[13px] text-match-text">
           {error}
         </p>
       )}
@@ -410,7 +410,7 @@ export function SellFlow() {
           </label>
 
           {videoUnavailable && (
-            <p className="mt-3 rounded-card border border-amber-border bg-amber-bg px-4 py-3 text-[13px] text-amber-text">
+            <p className="mt-3 rounded-card border border-match-border bg-match-bg px-4 py-3 text-[13px] text-match-text">
               Video hosting isn&apos;t configured on this deployment, so the
               video requirement is waived for now. Set the Cloudflare Stream
               environment variables to turn it back on.
@@ -757,13 +757,13 @@ export function SellFlow() {
               </span>
             </div>
             {summaryError && (
-              <p className="mt-2 text-[12px] text-amber-text">{summaryError}</p>
+              <p className="mt-2 text-[12px] text-match-text">{summaryError}</p>
             )}
           </div>
 
           {details.wearSummary && (
-            <div className="mt-4 rounded-card border border-amber-border bg-amber-bg p-4">
-              <p className="mb-2 text-[11px] uppercase tracking-wide text-amber-text">
+            <div className="mt-4 rounded-card border border-match-border bg-match-bg p-4">
+              <p className="mb-2 text-[11px] uppercase tracking-wide text-match-text">
                 Buyer-facing summary
               </p>
               <textarea
@@ -812,7 +812,7 @@ export function SellFlow() {
                 inputMode="numeric"
               />
               {priceTooLow && (
-                <span className="mt-1 block text-[11px] text-amber-text">
+                <span className="mt-1 block text-[11px] text-match-text">
                   Minimum is ${MIN_NEW_PRICE.toLocaleString("en-US")}.
                 </span>
               )}
@@ -937,7 +937,7 @@ function Field({
     <label className="block">
       <span className="mb-1 block text-[12px] font-medium text-muted">
         {label}
-        {required && <span className="text-amber"> *</span>}
+        {required && <span className="text-action"> *</span>}
       </span>
       {children}
     </label>

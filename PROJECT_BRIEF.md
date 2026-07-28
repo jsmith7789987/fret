@@ -173,15 +173,27 @@ Match the stack already established in earlier sessions:
 
 ## 9. Design and brand standards
 
-Reuse the established design system. Do not regenerate defaults.
+The full design system lives in `UI_SPEC.md` in the repo root. That file is the
+source of truth for colour, type, layout, and components. This section carries
+only the fixed points.
 
 1. Brand name: fret. (lowercase, the period is part of the logo).
-2. Feel: high-end audio brand meets clean SaaS. Sleek, modern, light. Not a music store. Not Reverb.
-3. Palette: canvas `#F8F7F5`, white `#FFFFFF` for cards and nav, near-black `#111110` for text and primary CTA, mid-gray `#6B6860` for secondary text, accent amber `#C17A2A` used sparingly for badges, alerts, the logo dot, and hover. Alert background `#FEF6EC`, border `#F0C88A`, text `#7A4F10`.
-4. Type: DM Serif Display for listing titles and display headings, Inter for UI, body, and labels.
-5. Components: cards 10px radius, 0.5px border `#e5e4e0`, white. Nav 52px, white, 0.5px bottom border. Filter chips 20px radius pills, active flips to near-black background with white text. Primary buttons near-black background, white text, 6px radius, 13px. No shadows except focus rings. Generous whitespace.
-6. Signature elements: the match badge (amber pill, "XX% match", shown when score is high enough) and the amber alert bar at the top of browse.
-7. Plain language throughout. No em dashes in UI copy.
+2. Feel: high end marketplace. Image led, white ground, serif display over sans
+   meta type, generous whitespace. Reference point is JamesEdition. Not a music
+   store. Not Reverb.
+3. Two accents, kept strictly apart. Action blue `#224FF1` for anything a person
+   can click or submit. Match amber `#C17A2A` for the match badge and the alert
+   bar only, never for a control.
+4. Ground is white `#FFFFFF`. `#F8F7F5` is a section band, not a card.
+   Text is `#111110`, secondary text `#6B6860`, all borders `#E5E4E0` at 0.5px.
+5. Type: DM Serif Display for display headings and names, Inter for anything a
+   person operates.
+6. Signature elements: the image led category tile, the match badge, and the
+   amber alert bar at the top of browse.
+7. No shadows except focus rings. Plain language throughout. No em dashes.
+
+Do not regenerate defaults. Extend `UI_SPEC.md` rather than inventing a second
+system alongside it.
 
 ## 10. Reporting and admin
 

@@ -1,4 +1,4 @@
-import { Nav } from "@/components/Nav";
+import { SiteHeader } from "@/components/nav/SiteHeader";
 import { SellFlow } from "@/components/sell/SellFlow";
 import { requireUser } from "@/lib/auth";
 
@@ -9,8 +9,8 @@ export default async function SellPage() {
   await requireUser("/sell");
 
   return (
-    <div className="min-h-screen bg-canvas">
-      <Nav />
+    <div className="min-h-screen bg-white">
+      <SiteHeader showCategories={false} />
       <main className="mx-auto max-w-3xl px-5 py-10">
         <div className="mb-8">
           <h1 className="font-serif text-[28px] leading-tight text-ink">

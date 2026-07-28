@@ -208,7 +208,7 @@ export function BrandPicker({
               >
                 {name}
                 {writeIns.includes(name) && (
-                  <span className="text-amber-border">new</span>
+                  <span className="text-match-border">new</span>
                 )}
                 <span aria-hidden>×</span>
               </button>

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Nav } from "@/components/Nav";
+import { SiteHeader } from "@/components/nav/SiteHeader";
 import { VideoPlayer } from "@/components/listing/VideoPlayer";
 import { ContactSeller } from "@/components/listing/ContactSeller";
 import { MatchBadge } from "@/components/ui/MatchBadge";
@@ -72,8 +72,8 @@ export default async function ListingDetailPage({
   ).filter((entry): entry is [string, string] => Boolean(entry[1]));
 
   return (
-    <div className="min-h-screen bg-canvas">
-      <Nav />
+    <div className="min-h-screen bg-white">
+      <SiteHeader showCategories={false} />
 
       <main className="mx-auto max-w-4xl px-5 py-8">
         {/* Media */}
@@ -135,7 +135,7 @@ export default async function ListingDetailPage({
                   Condition &amp; wear
                 </h2>
                 {listing.wearSummary && (
-                  <p className="rounded-card border border-amber-border bg-amber-bg px-4 py-3 text-[14px] leading-relaxed text-amber-text">
+                  <p className="rounded-card border border-match-border bg-match-bg px-4 py-3 text-[14px] leading-relaxed text-match-text">
                     {listing.wearSummary}
                   </p>
                 )}
@@ -210,7 +210,7 @@ export default async function ListingDetailPage({
               <p className="mt-1 text-[15px] font-medium text-ink">
                 {listing.seller.firstName ?? "Private seller"}
                 {listing.seller.role === "DEALER" && (
-                  <span className="ml-2 rounded-[20px] bg-amber-bg px-2 py-0.5 text-[11px] text-amber-text ring-1 ring-amber-border">
+                  <span className="ml-2 rounded-[20px] bg-match-bg px-2 py-0.5 text-[11px] text-match-text ring-1 ring-match-border">
                     Dealer
                   </span>
                 )}

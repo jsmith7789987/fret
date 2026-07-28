@@ -130,12 +130,12 @@ export function VoiceInput({
             aria-label={recording ? "Stop recording" : "Start voice input"}
             className={`absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border transition-colors ${
               recording
-                ? "border-amber-border bg-amber-bg"
+                ? "border-match-border bg-match-bg"
                 : "border-hairline bg-white hover:border-ink"
             }`}
           >
             {recording ? (
-              <span className="h-2.5 w-2.5 rounded-full bg-amber animate-pulseDot" />
+              <span className="h-2.5 w-2.5 rounded-full bg-action animate-pulseDot" />
             ) : (
               <svg
                 width="15"

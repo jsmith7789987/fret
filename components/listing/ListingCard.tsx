@@ -56,7 +56,7 @@ export function ListingCard({ listing }: { listing: ListingCardData }) {
       href={`/listing/${listing.id}`}
       className="group block overflow-hidden rounded-card border-[0.5px] border-hairline bg-white transition-colors hover:border-ink"
     >
-      <div className="relative aspect-[4/3] w-full bg-canvas">
+      <div className="relative aspect-[4/3] w-full bg-white">
         {thumb ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -105,7 +105,7 @@ export function ListingCard({ listing }: { listing: ListingCardData }) {
             {formatPrice(listing.price)}
           </span>
           <svg
-            className="text-muted transition-colors group-hover:text-amber"
+            className="text-muted transition-colors group-hover:text-action"
             width="16"
             height="16"
             viewBox="0 0 24 24"
