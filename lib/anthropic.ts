@@ -5,13 +5,8 @@ import Anthropic from "@anthropic-ai/sdk";
  * the brief, defaulting to a Sonnet-class model for cost. Read at call time so
  * a deployment can change it without a rebuild.
  */
-export function getModel(): string {
+function getModel(): string {
   return process.env.ANTHROPIC_MODEL || "claude-sonnet-4-6";
-}
-
-/** The model version recorded alongside stored AI results, for auditing. */
-export function getModelVersion(): string {
-  return getModel();
 }
 
 let client: Anthropic | null = null;
@@ -20,7 +15,7 @@ let client: Anthropic | null = null;
  * Lazily instantiate the Anthropic client so the app can build without the
  * API key present. The key is only ever read server-side.
  */
-export function getAnthropic(): Anthropic {
+function getAnthropic(): Anthropic {
   if (!process.env.ANTHROPIC_API_KEY) {
     throw new Error("ANTHROPIC_API_KEY is not set");
   }

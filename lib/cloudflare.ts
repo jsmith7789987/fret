@@ -100,6 +100,3 @@ export function streamThumbnailUrl(videoId: string): string {
   return `https://customer-${process.env.CLOUDFLARE_ACCOUNT_ID}.cloudflarestream.com/${videoId}/thumbnails/thumbnail.jpg`;
 }
 
-export function streamIframeUrl(videoId: string): string {
-  return `https://customer-${process.env.CLOUDFLARE_ACCOUNT_ID}.cloudflarestream.com/${videoId}/iframe`;
-}

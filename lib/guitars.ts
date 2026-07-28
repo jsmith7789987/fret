@@ -675,7 +675,7 @@ export const BOUTIQUE_BRANDS: Brand[] = [
 // Lookup helpers
 // ---------------------------------------------------------------------------
 
-export const ALL_BRANDS: Brand[] = [...MAJOR_BRANDS, ...BOUTIQUE_BRANDS];
+const ALL_BRANDS: Brand[] = [...MAJOR_BRANDS, ...BOUTIQUE_BRANDS];
 
 export function findBrand(nameOrSlug: string): Brand | undefined {
   const needle = normalizeBrandName(nameOrSlug);

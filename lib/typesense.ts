@@ -25,7 +25,7 @@ function getClient(): Client {
   return client;
 }
 
-export const LISTINGS_COLLECTION = "listings";
+const LISTINGS_COLLECTION = "listings";
 
 const schema = {
   name: LISTINGS_COLLECTION,
@@ -43,7 +43,7 @@ const schema = {
 /**
  * Ensure the listings collection exists. Safe to call repeatedly.
  */
-export async function ensureCollection(): Promise<void> {
+async function ensureCollection(): Promise<void> {
   const c = getClient();
   try {
     await c.collections(LISTINGS_COLLECTION).retrieve();
@@ -81,20 +81,4 @@ export async function indexListing(listing: Listing): Promise<void> {
   }
 }
 
-export async function removeListing(id: string): Promise<void> {
-  try {
-    await getClient().collections(LISTINGS_COLLECTION).documents(id).delete();
-  } catch (err) {
-    console.error("Typesense removeListing failed:", err);
-  }
-}
 
-export async function searchListings(query: string) {
-  await ensureCollection();
-  return getClient().collections(LISTINGS_COLLECTION).documents().search({
-    q: query,
-    query_by: "brand,model",
-    filter_by: "status:=ACTIVE",
-    sort_by: "price:asc",
-  });
-}
